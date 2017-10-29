@@ -106,8 +106,8 @@ namespace ACT.FFXIVPing
 
             public bool Equals(MIB_TCPROW_OWNER_PID other)
             {
-                return localAddr == other.localAddr && Equals(localPort, other.localPort) &&
-                       remoteAddr == other.remoteAddr && Equals(remotePort, other.remotePort) &&
+                return localAddr == other.localAddr && LocalPort == other.LocalPort &&
+                       remoteAddr == other.remoteAddr && RemotePort == other.RemotePort &&
                        owningPid == other.owningPid;
             }
 
@@ -122,9 +122,9 @@ namespace ACT.FFXIVPing
                 unchecked
                 {
                     var hashCode = (int) localAddr;
-                    hashCode = (hashCode * 397) ^ (localPort != null ? localPort.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ LocalPort;
                     hashCode = (hashCode * 397) ^ (int) remoteAddr;
-                    hashCode = (hashCode * 397) ^ (remotePort != null ? remotePort.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ RemotePort;
                     hashCode = (hashCode * 397) ^ (int) owningPid;
                     return hashCode;
                 }

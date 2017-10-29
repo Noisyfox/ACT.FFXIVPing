@@ -140,8 +140,8 @@ namespace ACT.FFXIVPing
 //                {
 //                    Lost = (uint) ((stPath.FastRetran + stPath.PktsRetrans) * 100 / stData.DataSegsOut);
 //                }
-                Controller.NotifyLogMessageAppend(false,
-                    $"TotalPkt={stData.DataSegsOut},TotalBytes={stData.DataBytesOut},FastRetran={stPath.FastRetran},PktsRetrans={stPath.PktsRetrans},SndDupAckEpisodes={stPath.SndDupAckEpisodes},BytesRetrans={stPath.BytesRetrans}");
+//                Controller.NotifyLogMessageAppend(false,
+//                    $"TotalPkt={stData.DataSegsOut},TotalBytes={stData.DataBytesOut},FastRetran={stPath.FastRetran},PktsRetrans={stPath.PktsRetrans},SndDupAckEpisodes={stPath.SndDupAckEpisodes},BytesRetrans={stPath.BytesRetrans}");
             }
         }
 
@@ -209,7 +209,7 @@ namespace ACT.FFXIVPing
                 var sendDelta = StasticData.DataBytesOut - start.StasticData.DataBytesOut;
                 var retransDelta = StasticPath.BytesRetrans - start.StasticPath.BytesRetrans;
 
-                return retransDelta * 100.0 / sendDelta;
+                return (retransDelta * 100.0 / sendDelta).Clamp(0, 100);
             }
         }
 
