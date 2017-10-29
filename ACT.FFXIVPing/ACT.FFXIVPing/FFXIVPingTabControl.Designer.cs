@@ -53,11 +53,6 @@
             this.labelX = new System.Windows.Forms.Label();
             this.labelY = new System.Windows.Forms.Label();
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
-            this.labelSize = new System.Windows.Forms.Label();
-            this.labelWidth = new System.Windows.Forms.Label();
-            this.labelHeight = new System.Windows.Forms.Label();
-            this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
             this.labelOpacity = new System.Windows.Forms.Label();
             this.trackBarOpacity = new System.Windows.Forms.TrackBar();
             this.labelOpacityValue = new System.Windows.Forms.Label();
@@ -66,6 +61,8 @@
             this.checkBoxAutoHide = new System.Windows.Forms.CheckBox();
             this.labelShortcutHide = new System.Windows.Forms.Label();
             this.buttonShortcutHide = new System.Windows.Forms.Button();
+            this.buttonFont = new System.Windows.Forms.Button();
+            this.textBoxFont = new System.Windows.Forms.TextBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.richTextBoxLog = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
@@ -77,8 +74,6 @@
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).BeginInit();
             this.tabPageLog.SuspendLayout();
             this.SuspendLayout();
@@ -91,7 +86,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(677, 494);
+            this.tabControl1.Size = new System.Drawing.Size(697, 487);
             this.tabControl1.TabIndex = 8;
             // 
             // tabPageGeneralSettings
@@ -103,7 +98,7 @@
             this.tabPageGeneralSettings.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneralSettings.Name = "tabPageGeneralSettings";
             this.tabPageGeneralSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneralSettings.Size = new System.Drawing.Size(669, 468);
+            this.tabPageGeneralSettings.Size = new System.Drawing.Size(689, 461);
             this.tabPageGeneralSettings.TabIndex = 0;
             this.tabPageGeneralSettings.Text = "General Settings";
             this.tabPageGeneralSettings.UseVisualStyleBackColor = true;
@@ -111,7 +106,7 @@
             // groupBoxUpdate
             // 
             this.groupBoxUpdate.Controls.Add(this.tableLayoutPanel4);
-            this.groupBoxUpdate.Location = new System.Drawing.Point(6, 240);
+            this.groupBoxUpdate.Location = new System.Drawing.Point(6, 246);
             this.groupBoxUpdate.Name = "groupBoxUpdate";
             this.groupBoxUpdate.Size = new System.Drawing.Size(263, 190);
             this.groupBoxUpdate.TabIndex = 4;
@@ -306,7 +301,7 @@
             this.groupBoxOverlay.Controls.Add(this.tableLayoutPanel1);
             this.groupBoxOverlay.Location = new System.Drawing.Point(6, 43);
             this.groupBoxOverlay.Name = "groupBoxOverlay";
-            this.groupBoxOverlay.Size = new System.Drawing.Size(505, 191);
+            this.groupBoxOverlay.Size = new System.Drawing.Size(505, 197);
             this.groupBoxOverlay.TabIndex = 1;
             this.groupBoxOverlay.TabStop = false;
             this.groupBoxOverlay.Text = "Overlay Settings";
@@ -324,19 +319,16 @@
             this.tableLayoutPanel1.Controls.Add(this.labelX, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.labelY, 3, 2);
             this.tableLayoutPanel1.Controls.Add(this.numericUpDownX, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.labelSize, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.labelWidth, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.labelHeight, 3, 3);
-            this.tableLayoutPanel1.Controls.Add(this.numericUpDownWidth, 2, 3);
-            this.tableLayoutPanel1.Controls.Add(this.numericUpDownHeight, 4, 3);
-            this.tableLayoutPanel1.Controls.Add(this.labelOpacity, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.trackBarOpacity, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.labelOpacityValue, 3, 4);
-            this.tableLayoutPanel1.Controls.Add(this.checkBoxClickthrough, 4, 4);
+            this.tableLayoutPanel1.Controls.Add(this.labelOpacity, 0, 3);
+            this.tableLayoutPanel1.Controls.Add(this.trackBarOpacity, 1, 3);
+            this.tableLayoutPanel1.Controls.Add(this.labelOpacityValue, 3, 3);
+            this.tableLayoutPanel1.Controls.Add(this.checkBoxClickthrough, 4, 3);
             this.tableLayoutPanel1.Controls.Add(this.checkBoxShowOverlay, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.checkBoxAutoHide, 3, 0);
             this.tableLayoutPanel1.Controls.Add(this.labelShortcutHide, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.buttonShortcutHide, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.buttonFont, 4, 4);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxFont, 0, 4);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -348,14 +340,13 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(499, 171);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(499, 177);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // numericUpDownY
             // 
             this.numericUpDownY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownY.Location = new System.Drawing.Point(332, 54);
+            this.numericUpDownY.Location = new System.Drawing.Point(314, 54);
             this.numericUpDownY.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -367,7 +358,7 @@
             0,
             -2147483648});
             this.numericUpDownY.Name = "numericUpDownY";
-            this.numericUpDownY.Size = new System.Drawing.Size(164, 21);
+            this.numericUpDownY.Size = new System.Drawing.Size(182, 21);
             this.numericUpDownY.TabIndex = 3;
             this.numericUpDownY.Value = new decimal(new int[] {
             200,
@@ -389,7 +380,7 @@
             // 
             this.labelX.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(86, 58);
+            this.labelX.Location = new System.Drawing.Point(62, 58);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(17, 12);
             this.labelX.TabIndex = 1;
@@ -399,7 +390,7 @@
             // 
             this.labelY.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.labelY.AutoSize = true;
-            this.labelY.Location = new System.Drawing.Point(309, 58);
+            this.labelY.Location = new System.Drawing.Point(291, 58);
             this.labelY.Name = "labelY";
             this.labelY.Size = new System.Drawing.Size(17, 12);
             this.labelY.TabIndex = 2;
@@ -408,7 +399,7 @@
             // numericUpDownX
             // 
             this.numericUpDownX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownX.Location = new System.Drawing.Point(109, 54);
+            this.numericUpDownX.Location = new System.Drawing.Point(85, 54);
             this.numericUpDownX.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -420,85 +411,9 @@
             0,
             -2147483648});
             this.numericUpDownX.Name = "numericUpDownX";
-            this.numericUpDownX.Size = new System.Drawing.Size(164, 21);
+            this.numericUpDownX.Size = new System.Drawing.Size(182, 21);
             this.numericUpDownX.TabIndex = 2;
             this.numericUpDownX.Value = new decimal(new int[] {
-            200,
-            0,
-            0,
-            0});
-            // 
-            // labelSize
-            // 
-            this.labelSize.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelSize.AutoSize = true;
-            this.labelSize.Location = new System.Drawing.Point(3, 85);
-            this.labelSize.Name = "labelSize";
-            this.labelSize.Size = new System.Drawing.Size(29, 12);
-            this.labelSize.TabIndex = 5;
-            this.labelSize.Text = "Size";
-            // 
-            // labelWidth
-            // 
-            this.labelWidth.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(62, 85);
-            this.labelWidth.Name = "labelWidth";
-            this.labelWidth.Size = new System.Drawing.Size(41, 12);
-            this.labelWidth.TabIndex = 6;
-            this.labelWidth.Text = "Width:";
-            // 
-            // labelHeight
-            // 
-            this.labelHeight.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.labelHeight.AutoSize = true;
-            this.labelHeight.Location = new System.Drawing.Point(279, 85);
-            this.labelHeight.Name = "labelHeight";
-            this.labelHeight.Size = new System.Drawing.Size(47, 12);
-            this.labelHeight.TabIndex = 7;
-            this.labelHeight.Text = "Height:";
-            // 
-            // numericUpDownWidth
-            // 
-            this.numericUpDownWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownWidth.Location = new System.Drawing.Point(109, 81);
-            this.numericUpDownWidth.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericUpDownWidth.Minimum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            this.numericUpDownWidth.Name = "numericUpDownWidth";
-            this.numericUpDownWidth.Size = new System.Drawing.Size(164, 21);
-            this.numericUpDownWidth.TabIndex = 4;
-            this.numericUpDownWidth.Value = new decimal(new int[] {
-            300,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownHeight
-            // 
-            this.numericUpDownHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownHeight.Location = new System.Drawing.Point(332, 81);
-            this.numericUpDownHeight.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Minimum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(164, 21);
-            this.numericUpDownHeight.TabIndex = 5;
-            this.numericUpDownHeight.Value = new decimal(new int[] {
             200,
             0,
             0,
@@ -507,7 +422,7 @@
             // labelOpacity
             // 
             this.labelOpacity.AutoSize = true;
-            this.labelOpacity.Location = new System.Drawing.Point(3, 105);
+            this.labelOpacity.Location = new System.Drawing.Point(3, 78);
             this.labelOpacity.Name = "labelOpacity";
             this.labelOpacity.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
             this.labelOpacity.Size = new System.Drawing.Size(53, 22);
@@ -519,10 +434,10 @@
             this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarOpacity.BackColor = System.Drawing.SystemColors.Window;
             this.tableLayoutPanel1.SetColumnSpan(this.trackBarOpacity, 2);
-            this.trackBarOpacity.Location = new System.Drawing.Point(62, 108);
+            this.trackBarOpacity.Location = new System.Drawing.Point(62, 81);
             this.trackBarOpacity.Maximum = 100;
             this.trackBarOpacity.Name = "trackBarOpacity";
-            this.trackBarOpacity.Size = new System.Drawing.Size(211, 45);
+            this.trackBarOpacity.Size = new System.Drawing.Size(205, 45);
             this.trackBarOpacity.TabIndex = 6;
             this.trackBarOpacity.TickFrequency = 10;
             this.trackBarOpacity.Value = 100;
@@ -531,7 +446,7 @@
             // labelOpacityValue
             // 
             this.labelOpacityValue.AutoSize = true;
-            this.labelOpacityValue.Location = new System.Drawing.Point(279, 105);
+            this.labelOpacityValue.Location = new System.Drawing.Point(273, 78);
             this.labelOpacityValue.MinimumSize = new System.Drawing.Size(35, 0);
             this.labelOpacityValue.Name = "labelOpacityValue";
             this.labelOpacityValue.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
@@ -543,7 +458,7 @@
             // checkBoxClickthrough
             // 
             this.checkBoxClickthrough.AutoSize = true;
-            this.checkBoxClickthrough.Location = new System.Drawing.Point(332, 108);
+            this.checkBoxClickthrough.Location = new System.Drawing.Point(314, 81);
             this.checkBoxClickthrough.Name = "checkBoxClickthrough";
             this.checkBoxClickthrough.Padding = new System.Windows.Forms.Padding(0, 5, 0, 0);
             this.checkBoxClickthrough.Size = new System.Drawing.Size(96, 21);
@@ -569,7 +484,7 @@
             // 
             this.checkBoxAutoHide.AutoSize = true;
             this.tableLayoutPanel1.SetColumnSpan(this.checkBoxAutoHide, 2);
-            this.checkBoxAutoHide.Location = new System.Drawing.Point(279, 3);
+            this.checkBoxAutoHide.Location = new System.Drawing.Point(273, 3);
             this.checkBoxAutoHide.Name = "checkBoxAutoHide";
             this.checkBoxAutoHide.Size = new System.Drawing.Size(180, 16);
             this.checkBoxAutoHide.TabIndex = 1;
@@ -591,12 +506,33 @@
             // buttonShortcutHide
             // 
             this.buttonShortcutHide.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonShortcutHide.Location = new System.Drawing.Point(109, 25);
+            this.buttonShortcutHide.Location = new System.Drawing.Point(85, 25);
             this.buttonShortcutHide.Name = "buttonShortcutHide";
-            this.buttonShortcutHide.Size = new System.Drawing.Size(164, 23);
+            this.buttonShortcutHide.Size = new System.Drawing.Size(182, 23);
             this.buttonShortcutHide.TabIndex = 14;
             this.buttonShortcutHide.UseVisualStyleBackColor = true;
             this.buttonShortcutHide.Click += new System.EventHandler(this.buttonShortcutHide_Click);
+            // 
+            // buttonFont
+            // 
+            this.buttonFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonFont.Location = new System.Drawing.Point(314, 132);
+            this.buttonFont.Name = "buttonFont";
+            this.buttonFont.Size = new System.Drawing.Size(182, 23);
+            this.buttonFont.TabIndex = 16;
+            this.buttonFont.Text = "Change Font";
+            this.buttonFont.UseVisualStyleBackColor = true;
+            this.buttonFont.Click += new System.EventHandler(this.buttonFont_Click);
+            // 
+            // textBoxFont
+            // 
+            this.textBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel1.SetColumnSpan(this.textBoxFont, 4);
+            this.textBoxFont.Location = new System.Drawing.Point(3, 133);
+            this.textBoxFont.Name = "textBoxFont";
+            this.textBoxFont.ReadOnly = true;
+            this.textBoxFont.Size = new System.Drawing.Size(305, 21);
+            this.textBoxFont.TabIndex = 15;
             // 
             // tabPageLog
             // 
@@ -604,7 +540,7 @@
             this.tabPageLog.Location = new System.Drawing.Point(4, 22);
             this.tabPageLog.Name = "tabPageLog";
             this.tabPageLog.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLog.Size = new System.Drawing.Size(669, 468);
+            this.tabPageLog.Size = new System.Drawing.Size(689, 540);
             this.tabPageLog.TabIndex = 2;
             this.tabPageLog.Text = "Log";
             this.tabPageLog.UseVisualStyleBackColor = true;
@@ -615,7 +551,7 @@
             this.richTextBoxLog.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxLog.Name = "richTextBoxLog";
             this.richTextBoxLog.ReadOnly = true;
-            this.richTextBoxLog.Size = new System.Drawing.Size(663, 462);
+            this.richTextBoxLog.Size = new System.Drawing.Size(683, 534);
             this.richTextBoxLog.TabIndex = 6;
             this.richTextBoxLog.Text = "";
             // 
@@ -626,7 +562,7 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.tabControl1);
             this.Name = "FFXIVPingTabControl";
-            this.Size = new System.Drawing.Size(677, 494);
+            this.Size = new System.Drawing.Size(697, 487);
             this.tabControl1.ResumeLayout(false);
             this.tabPageGeneralSettings.ResumeLayout(false);
             this.groupBoxUpdate.ResumeLayout(false);
@@ -639,8 +575,6 @@
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -674,11 +608,6 @@
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.Label labelY;
         private System.Windows.Forms.NumericUpDown numericUpDownX;
-        private System.Windows.Forms.Label labelSize;
-        private System.Windows.Forms.Label labelWidth;
-        private System.Windows.Forms.Label labelHeight;
-        private System.Windows.Forms.NumericUpDown numericUpDownWidth;
-        private System.Windows.Forms.NumericUpDown numericUpDownHeight;
         private System.Windows.Forms.Label labelOpacity;
         private System.Windows.Forms.TrackBar trackBarOpacity;
         private System.Windows.Forms.Label labelOpacityValue;
@@ -689,5 +618,7 @@
         private System.Windows.Forms.Button buttonShortcutHide;
         private System.Windows.Forms.TabPage tabPageLog;
         private System.Windows.Forms.RichTextBox richTextBoxLog;
+        private System.Windows.Forms.Button buttonFont;
+        private System.Windows.Forms.TextBox textBoxFont;
     }
 }

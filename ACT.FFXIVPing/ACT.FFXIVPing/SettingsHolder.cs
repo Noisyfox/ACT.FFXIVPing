@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
@@ -83,7 +86,9 @@ namespace ACT.FFXIVPing
         #region Settings
         
         public string Language { get; set; }
-        
+
+        public string OverlayFont { get; set; }
+
         public string VersionIgnored { get; set; }
 
         public string ShortcutHide { get; set; }
@@ -97,12 +102,14 @@ namespace ACT.FFXIVPing
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
             Settings.AddStringSetting(nameof(Language));
+            Settings.AddStringSetting(nameof(OverlayFont));
             Settings.AddStringSetting(nameof(VersionIgnored));
             Settings.AddStringSetting(nameof(ShortcutHide));
 
             _controller = plugin.Controller;
 
             _controller.LanguageChanged += ControllerOnLanguageChanged;
+            _controller.OverlayFontChanged += ControllerOnOverlayFontChanged;
             _controller.NewVersionIgnored += ControllerOnNewVersionIgnored;
             _controller.ShortcutChanged += ControllerOnShortcutChanged;
         }
@@ -114,6 +121,16 @@ namespace ACT.FFXIVPing
 
         public void NotifySettingsLoaded()
         {
+            try
+            {
+                _controller.NotifyOverlayFontChanged(false,
+                    (Font)TypeDescriptor.GetConverter(typeof(Font)).ConvertFromString(OverlayFont));
+            }
+            catch (Exception)
+            {
+                _controller.NotifyOverlayFontChanged(true, new Font(FontFamily.GenericSansSerif, 12, FontStyle.Regular));
+            }
+
             _controller.NotifyShortcutChanged(false, Shortcut.HideOverlay, ShortkeyManager.StringToKey(ShortcutHide));
 
             _controller.NotifySettingsLoaded();
@@ -127,6 +144,16 @@ namespace ACT.FFXIVPing
             }
 
             Language = lang;
+        }
+
+        private void ControllerOnOverlayFontChanged(bool fromView, Font font)
+        {
+            if (!fromView)
+            {
+                return;
+            }
+
+            OverlayFont = TypeDescriptor.GetConverter(typeof(Font)).ConvertToString(font);
         }
 
         private void ControllerOnNewVersionIgnored(bool fromView, string ignoredVersion)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ACT.FFXIVPing
@@ -21,15 +22,6 @@ namespace ACT.FFXIVPing
             OverlayMoved?.Invoke(fromView, x, y);
         }
 
-        public delegate void OnOverlayResizedDelegate(bool fromView, int w, int h);
-
-        public event OnOverlayResizedDelegate OverlayResized;
-
-        public void NotifyOverlayResized(bool fromView, int w, int h)
-        {
-            OverlayResized?.Invoke(fromView, w, h);
-        }
-
         public delegate void OnOpacityChangedDelegate(bool fromView, double value);
 
         public event OnOpacityChangedDelegate OpacityChanged;
@@ -48,6 +40,15 @@ namespace ACT.FFXIVPing
             ClickthroughChanged?.Invoke(fromView, clickthrough);
         }
 
+        public delegate void OnOverlayContentChangedDelegate(bool fromView, string content);
+
+        public event OnOverlayContentChangedDelegate OverlayContentChanged;
+
+        public void NotifyOverlayContentChanged(bool fromView, string content)
+        {
+            OverlayContentChanged?.Invoke(fromView, content);
+        }
+
         public delegate void OnLanguageChangedDelegate(bool fromView, string lang);
 
         public event OnLanguageChangedDelegate LanguageChanged;
@@ -64,6 +65,15 @@ namespace ACT.FFXIVPing
         public void NotifyLogMessageAppend(bool fromView, string log)
         {
             LogMessageAppend?.Invoke(fromView, log);
+        }
+
+        public delegate void OnOverlayFontChangedDelegate(bool fromView, Font font);
+
+        public event OnOverlayFontChangedDelegate OverlayFontChanged;
+
+        public void NotifyOverlayFontChanged(bool fromView, Font font)
+        {
+            OverlayFontChanged?.Invoke(fromView, font);
         }
 
         public delegate void OnShowOverlayChangedDelegate(bool fromView, bool showOverlay);

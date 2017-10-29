@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ namespace ACT.FFXIVPing
     {
         private FFXIVPingPlugin _plugin;
         private MainController _controller;
+        private Font _currentFont;
 
         public FFXIVPingTabControl()
         {
@@ -36,8 +38,6 @@ namespace ACT.FFXIVPing
             // add settings
             settings.AddControlSetting(numericUpDownX);
             settings.AddControlSetting(numericUpDownY);
-            settings.AddControlSetting(numericUpDownWidth);
-            settings.AddControlSetting(numericUpDownHeight);
             settings.AddControlSetting(trackBarOpacity);
             settings.AddControlSetting(checkBoxClickthrough);
             settings.AddControlSetting(checkBoxShowOverlay);
@@ -49,16 +49,14 @@ namespace ACT.FFXIVPing
 
             numericUpDownX.ValueChanged += NumericUpDownPositionOnValueChanged;
             numericUpDownY.ValueChanged += NumericUpDownPositionOnValueChanged;
-            numericUpDownWidth.ValueChanged += NumericUpDownSizeOnValueChanged;
-            numericUpDownHeight.ValueChanged += NumericUpDownSizeOnValueChanged;
             checkBoxClickthrough.CheckedChanged += CheckBoxClickthroughOnCheckedChanged;
             comboBoxLanguage.SelectedIndexChanged += ComboBoxLanguageSelectedIndexChanged;
 
             _controller.SettingsLoaded += ControllerOnSettingsLoaded;
             _controller.OverlayMoved += ControllerOnOverlayMoved;
-            _controller.OverlayResized += ControllerOnOverlayResized;
             _controller.LanguageChanged += ControllerOnLanguageChanged;
             _controller.LogMessageAppend += ControllerOnLogMessageAppend;
+            _controller.OverlayFontChanged += ControllerOnOverlayFontChanged;
             _controller.UpdateCheckingStarted += ControllerOnUpdateCheckingStarted;
             _controller.VersionChecked += ControllerOnVersionChecked;
             _controller.ShortcutChanged += ControllerOnShortcutChanged;
@@ -70,7 +68,6 @@ namespace ACT.FFXIVPing
         {
             trackBarOpacity_ValueChanged(this, EventArgs.Empty);
             NumericUpDownPositionOnValueChanged(this, EventArgs.Empty);
-            NumericUpDownSizeOnValueChanged(this, EventArgs.Empty);
             CheckBoxClickthroughOnCheckedChanged(this, EventArgs.Empty);
             checkBoxShowOverlay_CheckedChanged(this, EventArgs.Empty);
             checkBoxAutoHide_CheckedChanged(this, EventArgs.Empty);
@@ -95,6 +92,18 @@ namespace ACT.FFXIVPing
             labelOpacityValue.Text = $"{trackBarOpacity.Value}%";
             _controller.NotifyOpacityChanged(false, trackBarOpacity.Value / 100D);
         }
+
+        private void buttonFont_Click(object sender, EventArgs e)
+        {
+            var fontdialog = new FontDialog();
+            fontdialog.Font = _currentFont;
+
+            if (fontdialog.ShowDialog() != DialogResult.Cancel)
+            {
+                _controller.NotifyOverlayFontChanged(true, fontdialog.Font);
+            }
+        }
+
         private void checkBoxShowOverlay_CheckedChanged(object sender, EventArgs e)
         {
             _controller.NotifyShowOverlayChanged(true, checkBoxShowOverlay.Checked);
@@ -107,11 +116,6 @@ namespace ACT.FFXIVPing
         private void NumericUpDownPositionOnValueChanged(object sender, EventArgs eventArgs)
         {
             _controller.NotifyOverlayMoved(false, (int)numericUpDownX.Value, (int)numericUpDownY.Value);
-        }
-
-        private void NumericUpDownSizeOnValueChanged(object sender, EventArgs eventArgs)
-        {
-            _controller.NotifyOverlayResized(false, (int)numericUpDownWidth.Value, (int)numericUpDownHeight.Value);
         }
 
         private void CheckBoxClickthroughOnCheckedChanged(object sender, EventArgs eventArgs)
@@ -174,23 +178,6 @@ namespace ACT.FFXIVPing
             numericUpDownY.ValueChanged += NumericUpDownPositionOnValueChanged;
         }
 
-        private void ControllerOnOverlayResized(bool fromView, int w, int h)
-        {
-            if (!fromView)
-            {
-                return;
-            }
-
-            numericUpDownWidth.ValueChanged -= NumericUpDownSizeOnValueChanged;
-            numericUpDownHeight.ValueChanged -= NumericUpDownSizeOnValueChanged;
-
-            numericUpDownWidth.Value = w;
-            numericUpDownHeight.Value = h;
-
-            numericUpDownWidth.ValueChanged += NumericUpDownSizeOnValueChanged;
-            numericUpDownHeight.ValueChanged += NumericUpDownSizeOnValueChanged;
-        }
-
         private void ControllerOnLanguageChanged(bool fromView, string lang)
         {
             if (fromView)
@@ -205,6 +192,12 @@ namespace ACT.FFXIVPing
         private void ControllerOnLogMessageAppend(bool fromView, string log)
         {
             ThreadInvokes.RichTextBoxAppendDateTimeLine(ActGlobals.oFormActMain, richTextBoxLog, log);
+        }
+
+        private void ControllerOnOverlayFontChanged(bool fromView, Font font)
+        {
+            _currentFont = font;
+            textBoxFont.Text = TypeDescriptor.GetConverter(typeof(Font)).ConvertToString(font);
         }
 
         private void ControllerOnUpdateCheckingStarted(bool fromView)

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,9 +49,10 @@ namespace ACT.FFXIVPing
             _controller = plugin.Controller;
 
             _controller.OverlayMoved += ControllerOnOverlayMoved;
-            _controller.OverlayResized += ControllerOnOverlayResized;
             _controller.OpacityChanged += ControllerOnOpacityChanged;
             _controller.ClickthroughChanged += ControllerOnClickthroughChanged;
+            _controller.OverlayContentChanged += ControllerOnOverlayContentChanged;
+            _controller.OverlayFontChanged += ControllerOnOverlayFontChanged;
             _controller.OverlayAutoHideChanged += ControllerOnOverlayAutoHideChanged;
             _controller.ShowOverlayChanged += ControllerOnShowOverlayChanged;
             _controller.ActivatedProcessPathChanged += ControllerOnActivatedProcessPathChanged;
@@ -62,27 +65,15 @@ namespace ACT.FFXIVPing
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _controller.OverlayMoved -= ControllerOnOverlayMoved;
-            _controller.OverlayResized -= ControllerOnOverlayResized;
             _controller.OpacityChanged -= ControllerOnOpacityChanged;
             _controller.ClickthroughChanged -= ControllerOnClickthroughChanged;
+            _controller.OverlayContentChanged -= ControllerOnOverlayContentChanged;
+            _controller.OverlayFontChanged -= ControllerOnOverlayFontChanged;
             _controller.OverlayAutoHideChanged -= ControllerOnOverlayAutoHideChanged;
             _controller.ShowOverlayChanged -= ControllerOnShowOverlayChanged;
             _controller.ActivatedProcessPathChanged -= ControllerOnActivatedProcessPathChanged;
 
             _isClosed = true;
-        }
-        private void ThumbResize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
-        {
-            var height = Height + e.VerticalChange;
-            var width = Width + e.HorizontalChange;
-
-            height = height.Clamp(MinHeight, MaxHeight);
-            width = width.Clamp(MinWidth, MaxWidth);
-
-            Height = height;
-            Width = width;
-
-            _controller.NotifyOverlayResized(true, (int)width, (int)height);
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -134,9 +125,35 @@ namespace ACT.FFXIVPing
                 return;
             }
             Win32APIUtils.SetWS_EX_TRANSPARENT(_handle, clickthrough);
+        }
 
-            var v = clickthrough ? Visibility.Collapsed : Visibility.Visible;
-            ThumbResize.Visibility = v;
+        private void ControllerOnOverlayContentChanged(bool fromView, string content)
+        {
+            
+            if (LabelPing.Dispatcher.CheckAccess())
+            {
+                if (_isClosed)
+                {
+                    return;
+                }
+                LabelPing.Content = content;
+            }
+            else
+            {
+                LabelPing.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    ControllerOnOverlayContentChanged(fromView, content);
+                }));
+            }
+        }
+
+        private void ControllerOnOverlayFontChanged(bool fromView, Font font)
+        {
+            var tf = Utils.NewTypeFaceFromFont(font);
+            LabelPing.FontFamily = tf.FontFamily;
+            LabelPing.FontStyle = tf.Style;
+            LabelPing.FontWeight = tf.Weight;
+            LabelPing.FontSize = font.Size * 96.0 / 72.0;
         }
 
         private void ControllerOnOverlayAutoHideChanged(bool fromView, bool autoHide)
