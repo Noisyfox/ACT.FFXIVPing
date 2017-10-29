@@ -1,0 +1,32 @@
+version: 1.0.0.{build}
+image: Visual Studio 2017
+configuration:
+- Debug
+- Release
+assembly_info:
+  patch: true
+  file: ACT.FFXIVPing\ACT.FFXIVPing*\**\AssemblyInfo.*
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+before_build:
+- cmd: >-
+    nuget restore ACT.FFXIVPing
+
+    cp MSBuild.ILMerge.Task.targets .\ACT.FFXIVPing\packages\MSBuild.ILMerge.Task.1.0.5\build\MSBuild.ILMerge.Task.targets
+build:
+  project: ACT.FFXIVPing/ACT.FFXIVPing.sln
+  verbosity: minimal
+after_build:
+- cmd: >-
+    cd ACT.FFXIVPing\ACT.FFXIVPing\bin\%CONFIGURATION%\
+
+
+    7z a -x!*.pdb %APPVEYOR_BUILD_FOLDER%\ACT.FFXIVPing-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.7z .\*
+test: off
+artifacts:
+- path: ACT.FFXIVPing\ACT.FFXIVPing\bin\**\*
+  name: Bin
+- path: ACT.FFXIVPing*.7z
+  name: PKG
+  
