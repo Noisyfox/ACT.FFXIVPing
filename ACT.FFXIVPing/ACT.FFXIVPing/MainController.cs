@@ -94,13 +94,13 @@ namespace ACT.FFXIVPing
             OverlayAutoHideChanged?.Invoke(fromView, autoHide);
         }
 
-        public delegate void OnActivatedProcessPathChangedDelegate(bool fromView, string path);
+        public delegate void OnActivatedProcessPathChangedDelegate(bool fromView, string path, uint pid);
 
         public event OnActivatedProcessPathChangedDelegate ActivatedProcessPathChanged;
 
-        public void NotifyActivatedProcessPathChanged(bool fromView, string path)
+        public void NotifyActivatedProcessPathChanged(bool fromView, string path, uint pid)
         {
-            ActivatedProcessPathChanged?.Invoke(fromView, path);
+            ActivatedProcessPathChanged?.Invoke(fromView, path, pid);
         }
 
         public delegate void OnUpdateCheckingStarted(bool fromView);

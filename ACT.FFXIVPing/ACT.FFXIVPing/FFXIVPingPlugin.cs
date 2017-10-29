@@ -16,6 +16,7 @@ namespace ACT.FFXIVPing
         public Label StatusLabel { get; private set; }
         public FFXIVPingTabControl SettingsTab { get; private set; }
         public PingWindow OverlayWPF { get; private set; }
+        private readonly NetworkProbeService _networkProbe = new NetworkProbeService();
         internal UpdateChecker UpdateChecker { get; } = new UpdateChecker();
         private readonly WindowsMessagePump _windowsMessagePump = new WindowsMessagePump();
         private ShortkeyManager _shortkeyManager;
@@ -46,6 +47,7 @@ namespace ACT.FFXIVPing
 
                 Controller.ActivatedProcessPathChanged += ControllerOnActivatedProcessPathChanged;
 
+                _networkProbe.AttachToAct(this);
                 _windowsMessagePump.AttachToAct(this);
                 UpdateChecker.AttachToAct(this);
 
@@ -55,6 +57,7 @@ namespace ACT.FFXIVPing
                 Settings.PostAttachToAct(this);
                 OverlayWPF.PostAttachToAct(this);
                 SettingsTab.PostAttachToAct(this);
+                _networkProbe.PostAttachToAct(this);
                 _windowsMessagePump.PostAttachToAct(this);
                 UpdateChecker.PostAttachToAct(this);
                 _shortkeyManager.PostAttachToAct(this);
@@ -101,6 +104,7 @@ namespace ACT.FFXIVPing
 
             OverlayWPF?.Close();
 
+            _networkProbe.Stop();
             UpdateChecker.Stop();
 
             if (_settingsLoaded)
@@ -111,7 +115,7 @@ namespace ACT.FFXIVPing
             StatusLabel.Text = "Exited. Bye~";
         }
 
-        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path)
+        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path, uint pid)
         {
             _isGameActivated = Utils.IsGameExePath(path);
         }

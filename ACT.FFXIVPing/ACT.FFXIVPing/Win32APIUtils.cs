@@ -74,7 +74,7 @@ namespace ACT.FFXIVPing
             SetWindowPos(handle, HWND_TOP, 0, 0, w, h, SWP_NOMOVE);
         }
 
-        public static string GetForgegroundProcessPath()
+        public static Tuple<string, uint> GetForgegroundProcessPath()
         {
             var hWndFg = GetForegroundWindow();
             if (hWndFg == IntPtr.Zero)
@@ -84,14 +84,14 @@ namespace ACT.FFXIVPing
             return GetProcessPathByWindow(hWndFg);
         }
 
-        public static string GetProcessPathByWindow(IntPtr hWnd)
+        public static Tuple<string, uint> GetProcessPathByWindow(IntPtr hWnd)
         {
             GetWindowThreadProcessId(hWnd, out var pid);
             if (pid == 0)
             {
                 return null;
             }
-            return Process.GetProcessById((int)pid).MainModule.FileName;
+            return new Tuple<string, uint>(Process.GetProcessById((int)pid).MainModule.FileName, pid);
         }
     }
 }

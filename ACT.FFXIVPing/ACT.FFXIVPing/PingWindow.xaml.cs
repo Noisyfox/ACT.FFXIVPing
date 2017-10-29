@@ -168,7 +168,7 @@ namespace ACT.FFXIVPing
             CheckVisibility();
         }
 
-        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path)
+        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path, uint pid)
         {
             _activatedExePath = path;
             CheckVisibility();

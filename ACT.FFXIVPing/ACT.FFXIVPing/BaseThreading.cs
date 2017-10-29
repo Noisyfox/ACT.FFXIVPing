@@ -1,10 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 
 namespace ACT.FFXIVPing
 {
     abstract class BaseThreading<T>
     {
         protected readonly object WorkingThreadLock = new object();
+        private readonly object _sleepObj = new object();
         protected bool WorkingThreadStopping { get; private set; } = false;
         private Thread _workingThread;
 
@@ -26,6 +28,10 @@ namespace ACT.FFXIVPing
                 while (_workingThread != null && _workingThread.IsAlive)
                 {
                     WorkingThreadStopping = true;
+                    lock (_sleepObj)
+                    {
+                        Monitor.Pulse(_sleepObj);
+                    }
                     Monitor.Wait(WorkingThreadLock, 100);
                 }
                 _workingThread = null;
@@ -57,6 +63,19 @@ namespace ACT.FFXIVPing
             t.IsBackground = true;
 
             return t;
+        }
+
+        protected void SafeSleep(TimeSpan timeout)
+        {
+            lock (_sleepObj)
+            {
+                Monitor.Wait(_sleepObj, timeout);
+            }
+        }
+
+        protected void SafeSleep(int millisecondsTimeout)
+        {
+            SafeSleep(TimeSpan.FromMilliseconds(millisecondsTimeout));
         }
     }
 }

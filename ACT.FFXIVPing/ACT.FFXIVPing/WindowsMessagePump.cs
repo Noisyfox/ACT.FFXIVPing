@@ -12,6 +12,7 @@ namespace ACT.FFXIVPing
         private WinEventDelegate _hookPtrDele;
         private IntPtr _hookPtrForeground = IntPtr.Zero;
         private string _lastActivatedProcessPath = null;
+        private uint _lastActivatedProcessPid = 0;
 
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
@@ -72,24 +73,28 @@ namespace ACT.FFXIVPing
             {
                 return;
             }
-            string path = null;
+            Tuple<string, uint> pathPid = null;
             if (hwnd != IntPtr.Zero)
             {
-                path = Win32APIUtils.GetProcessPathByWindow(hwnd);
+                pathPid = Win32APIUtils.GetProcessPathByWindow(hwnd);
             }
-            if (path == null)
+            if (pathPid == null)
             {
-                path = Win32APIUtils.GetForgegroundProcessPath();
+                pathPid = Win32APIUtils.GetForgegroundProcessPath();
             }
-            if (path == null)
+            if (pathPid == null)
             {
                 return;
             }
 
-            if (_lastActivatedProcessPath != path)
+            var path = pathPid.Item1;
+            var pid = pathPid.Item2;
+
+            if (_lastActivatedProcessPath != path || _lastActivatedProcessPid != pid)
             {
                 _lastActivatedProcessPath = path;
-                _controller.NotifyActivatedProcessPathChanged(false, path);
+                _lastActivatedProcessPid = pid;
+                _controller.NotifyActivatedProcessPathChanged(false, path, pid);
             }
             //            Log.Text += GetActiveWindowTitle() + "\r\n";
 //            _controller.NotifyLogMessageAppend(false, path + "\r\n");

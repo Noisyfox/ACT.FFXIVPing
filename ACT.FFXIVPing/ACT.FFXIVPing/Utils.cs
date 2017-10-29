@@ -39,5 +39,10 @@ namespace ACT.FFXIVPing
 
             return typeface;
         }
+
+        public static bool IsGameExeProcess(uint pid)
+        {
+            return IsGameExePath(Process.GetProcessById((int) pid).MainModule.FileName);
+        }
     }
 }

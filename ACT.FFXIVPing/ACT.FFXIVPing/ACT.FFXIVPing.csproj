@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="MainController.cs" />
     <Compile Include="MessageBoxManager.cs" />
+    <Compile Include="NetworkProbeService.cs" />
     <Compile Include="PingWindow.xaml.cs">
       <DependentUpon>PingWindow.xaml</DependentUpon>
     </Compile>
@@ -99,6 +100,7 @@
     <Compile Include="UpdateChecker.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Win32APIUtils.cs" />
+    <Compile Include="Win32PInvoke_iphlpapi.cs" />
     <Compile Include="WindowsMessagePump.cs" />
   </ItemGroup>
   <ItemGroup>
