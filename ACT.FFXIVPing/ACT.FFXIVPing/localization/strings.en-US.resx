@@ -129,6 +129,9 @@
   <data name="buttonDownloadUpdate" xml:space="preserve">
     <value>Open Download Website</value>
   </data>
+  <data name="buttonFont" xml:space="preserve">
+    <value>Change Font</value>
+  </data>
   <data name="buttonHotkeyNone" xml:space="preserve">
     <value>Clear Hotkey</value>
   </data>

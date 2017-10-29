@@ -129,6 +129,9 @@
   <data name="buttonDownloadUpdate" xml:space="preserve">
     <value>打开下载页面</value>
   </data>
+  <data name="buttonFont" xml:space="preserve">
+    <value>更改字体</value>
+  </data>
   <data name="buttonHotkeyNone" xml:space="preserve">
     <value>清除快捷键</value>
   </data>

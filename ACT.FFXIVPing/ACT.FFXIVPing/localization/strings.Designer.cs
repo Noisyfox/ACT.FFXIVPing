@@ -97,6 +97,15 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
+        ///   查找类似 更改字体 的本地化字符串。
+        /// </summary>
+        internal static string buttonFont {
+            get {
+                return ResourceManager.GetString("buttonFont", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 清除快捷键 的本地化字符串。
         /// </summary>
         internal static string buttonHotkeyNone {
