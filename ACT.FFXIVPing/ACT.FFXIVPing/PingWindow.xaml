@@ -20,6 +20,6 @@
                 <DropShadowEffect BlurRadius="7" ShadowDepth="0" Direction="0" Color="#ffc64c"/>
             </Label.Effect>
         </Label>
-        <Border Background="Black" Opacity="0.01"  Cursor="SizeAll" MouseDown="Border_MouseDown"/>
+        <Border Name="ClickBackground" Background="Black" Opacity="0.01"  Cursor="SizeAll" MouseDown="Border_MouseDown"/>
     </Grid>
 </Window>

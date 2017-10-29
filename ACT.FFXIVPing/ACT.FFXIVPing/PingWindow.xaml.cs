@@ -125,6 +125,7 @@ namespace ACT.FFXIVPing
                 return;
             }
             Win32APIUtils.SetWS_EX_TRANSPARENT(_handle, clickthrough);
+            ClickBackground.Visibility = clickthrough ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void ControllerOnOverlayContentChanged(bool fromView, string content)
