@@ -71,6 +71,29 @@ namespace ACT.FFXIVPing
 
             _isClosed = true;
         }
+        private void ThumbResize_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)
+        {
+            var height = Height + e.VerticalChange;
+            var width = Width + e.HorizontalChange;
+
+            height = height.Clamp(MinHeight, MaxHeight);
+            width = width.Clamp(MinWidth, MaxWidth);
+
+            Height = height;
+            Width = width;
+
+            _controller.NotifyOverlayResized(true, (int)width, (int)height);
+        }
+
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Win32APIUtils.DragMove(_handle);
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            _controller.NotifyOverlayMoved(true, (int)Left, (int)Top);
+        }
 
         private void ControllerOnOverlayMoved(bool fromView, int x, int y)
         {
@@ -112,9 +135,8 @@ namespace ACT.FFXIVPing
             }
             Win32APIUtils.SetWS_EX_TRANSPARENT(_handle, clickthrough);
 
-//            var v = clickthrough ? Visibility.Collapsed : Visibility.Visible;
-//            ThumbResize.Visibility = v;
-//            ThumbMove.Visibility = v;
+            var v = clickthrough ? Visibility.Collapsed : Visibility.Visible;
+            ThumbResize.Visibility = v;
         }
 
         private void ControllerOnOverlayAutoHideChanged(bool fromView, bool autoHide)
