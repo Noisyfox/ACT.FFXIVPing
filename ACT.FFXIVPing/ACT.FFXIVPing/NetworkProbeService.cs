@@ -2,23 +2,23 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ACT.FFXIVPing
 {
     class NetworkProbeService : IPluginComponent
     {
+        private static MainController Controller;
         private MainController _controller;
 
         private readonly ProbeThread _workingThread = new ProbeThread();
         private readonly ConcurrentDictionary<uint, ProcessContext> _contexts = new ConcurrentDictionary<uint, ProcessContext>();
-        private uint _currentPid = 0;
-        private uint _lastPid = 0;
+        private uint _currentPid;
+        private uint _lastPid;
 
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
             _controller = plugin.Controller;
+            Controller = _controller;
             _controller.ActivatedProcessPathChanged += ControllerOnActivatedProcessPathChanged;
         }
 
@@ -33,6 +33,7 @@ namespace ACT.FFXIVPing
         public void Stop()
         {
             _workingThread.StopWorkingThread();
+            _contexts.Clear();
         }
 
         private void ControllerOnActivatedProcessPathChanged(bool fromView, string path, uint pid)
@@ -100,9 +101,55 @@ namespace ACT.FFXIVPing
             _controller.NotifyOverlayContentChanged(false, $"Ping {ctx.TTL}ms, {ctx.Lost}% Pkt Lost");
         }
 
+        private class ConnectionContext
+        {
+            public Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID Connection;
+            public DateTime LastActivate = DateTime.Now;
+
+            private readonly LinkedList<ConnectionStasticRecord> _stasticRecords =
+                new LinkedList<ConnectionStasticRecord>();
+
+            public uint TTL;
+            public uint Lost;
+
+            public void Update(ConnectionStasticRecord record)
+            {
+                LastActivate = DateTime.Now;
+                var stData = record.StasticData;
+                var stPath = record.StasticPath;
+
+                TTL = stPath.SmoothedRtt;
+
+                // TODO: Calculate pkt lost
+                while ((_stasticRecords.Count > 0
+                        && record.Timestamp.Subtract(_stasticRecords.First.Value.Timestamp).Seconds > 20)
+                       || _stasticRecords.Count > 5)
+                {
+                    _stasticRecords.RemoveFirst();
+                }
+
+                var lost = _stasticRecords.Select(record.CalculateLost)
+                    .DefaultIfEmpty(0)
+                    .Max();
+
+                _stasticRecords.AddLast(record);
+
+                Lost = (uint) lost;
+
+//                if (stData.DataSegsOut != 0)
+//                {
+//                    Lost = (uint) ((stPath.FastRetran + stPath.PktsRetrans) * 100 / stData.DataSegsOut);
+//                }
+                Controller.NotifyLogMessageAppend(false,
+                    $"TotalPkt={stData.DataSegsOut},TotalBytes={stData.DataBytesOut},FastRetran={stPath.FastRetran},PktsRetrans={stPath.PktsRetrans},SndDupAckEpisodes={stPath.SndDupAckEpisodes},BytesRetrans={stPath.BytesRetrans}");
+            }
+        }
+
         private class ProcessContext
         {
+            private readonly ConcurrentDictionary<Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID, ConnectionContext> _allConnections = new ConcurrentDictionary<Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID, ConnectionContext>();
             public DateTime LastActivate = DateTime.Now;
+
             public uint Pid;
 
             public uint TTL;
@@ -110,11 +157,23 @@ namespace ACT.FFXIVPing
 
             public void Update(List<ConnectionStasticRecord> records)
             {
-                LastActivate = DateTime.Now;
+                var now = DateTime.Now;
+                LastActivate = now;
 
-                TTL = records.Select(it => it.Stastic.SmoothedRtt).Max();
+                foreach (var r in records)
+                {
+                    _allConnections.GetOrAdd(r.TcpRow, c => new ConnectionContext
+                    {
+                        Connection = c
+                    }).Update(r);
+                }
 
-                // TODO: Calculate pkt lost
+                // Remove inactivated connections
+                _allConnections.Values.Where(it => now.Subtract(it.LastActivate).TotalMinutes > 1)
+                    .Select(it => it.Connection).ToList().ForEach(c => _allConnections.TryRemove(c, out var _));
+
+                TTL = _allConnections.Values.Select(it => it.TTL).Max();
+                Lost = _allConnections.Values.Select(it => it.Lost).Max();
             }
         }
 
@@ -126,8 +185,32 @@ namespace ACT.FFXIVPing
 
         private class ConnectionStasticRecord
         {
+            public DateTime Timestamp;
             public Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID TcpRow;
-            public Win32PInvoke_iphlpapi.TCP_ESTATS_PATH_ROD_v0 Stastic;
+            public Win32PInvoke_iphlpapi.TCP_ESTATS_DATA_ROD_v0 StasticData;
+            public Win32PInvoke_iphlpapi.TCP_ESTATS_PATH_ROD_v0 StasticPath;
+
+            public double CalculateLost(ConnectionStasticRecord start)
+            {
+                if (Timestamp <= start.Timestamp)
+                {
+                    return 0;
+                }
+
+                if (StasticData.DataBytesOut <= start.StasticData.DataBytesOut)
+                {
+                    return 0;
+                }
+
+                if (StasticPath.BytesRetrans <= start.StasticPath.BytesRetrans)
+                {
+                    return 0;
+                }
+                var sendDelta = StasticData.DataBytesOut - start.StasticData.DataBytesOut;
+                var retransDelta = StasticPath.BytesRetrans - start.StasticPath.BytesRetrans;
+
+                return retransDelta * 100.0 / sendDelta;
+            }
         }
 
         private class ProbeThread : BaseThreading<ProbeContext>
@@ -157,9 +240,8 @@ namespace ACT.FFXIVPing
                                         {
                                             return Utils.IsGameExeProcess(it.ProcessId);
                                         }
-                                        catch (Exception ex)
+                                        catch (Exception)
                                         {
-//                                        service._controller?.NotifyLogMessageAppend(false, $"pid={it.ProcessId}:{ex}\n");
                                         }
                                         return false;
                                     })
@@ -168,42 +250,27 @@ namespace ACT.FFXIVPing
                             if (gameConnections.Count > 0)
                             {
                                 var records = new List<ConnectionStasticRecord>();
-//                                service._controller?.NotifyLogMessageAppend(false,
-//                                    $"Find {gameConnections.Count} process(es).");
                                 foreach (var connection in gameConnections)
                                 {
-//                                    service._controller?.NotifyLogMessageAppend(false, $"Game pid: {connection.Key}");
-//                                    var i = 0;
                                     foreach (var row in connection.Value)
                                     {
-//                                        service._controller?.NotifyLogMessageAppend(false,
-//                                            $"\tTCP[{i}] Local Addr: {row.LocalAddress}");
-//                                        service._controller?.NotifyLogMessageAppend(false,
-//                                            $"\tTCP[{i}] Local Port: {row.LocalPort}");
-//                                        service._controller?.NotifyLogMessageAppend(false,
-//                                            $"\tTCP[{i}] Remote Addr: {row.RemoteAddress}");
-//                                        service._controller?.NotifyLogMessageAppend(false,
-//                                            $"\tTCP[{i}] Remote Port: {row.RemotePort}");
 
-                                        var stastic = new Win32PInvoke_iphlpapi.TCP_ESTATS_PATH_ROD_v0();
-                                        if (Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats(row, ref stastic))
+                                        var stasticData = new Win32PInvoke_iphlpapi.TCP_ESTATS_DATA_ROD_v0();
+                                        var stasticPath = new Win32PInvoke_iphlpapi.TCP_ESTATS_PATH_ROD_v0();
+                                        if (
+                                            Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats(row, Win32PInvoke_iphlpapi.TCP_ESTATS_TYPE.TcpConnectionEstatsData, ref stasticData)
+                                            && Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats(row, Win32PInvoke_iphlpapi.TCP_ESTATS_TYPE.TcpConnectionEstatsPath, ref stasticPath)
+                                            )
                                         {
                                             var record = new ConnectionStasticRecord
                                             {
+                                                Timestamp = DateTime.Now,
                                                 TcpRow = row,
-                                                Stastic = stastic
+                                                StasticData = stasticData,
+                                                StasticPath = stasticPath
                                             };
-//                                            service._controller?.NotifyLogMessageAppend(false,
-//                                                $"\tTCP[{i}] RTT: min={stastic.MinRtt},max={stastic.MaxRtt},sample={stastic.SampleRtt},smooth={stastic.SmoothedRtt},variance={stastic.RttVar}");
                                             records.Add(record);
                                         }
-//                                        else
-//                                        {
-//                                            service._controller?.NotifyLogMessageAppend(false,
-//                                                "\tGetPerTcpConnectionEStats failed");
-//                                        }
-//
-//                                        i++;
                                     }
                                 }
                                 service.SubmitRecords(records);

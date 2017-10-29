@@ -63,7 +63,7 @@ namespace ACT.FFXIVPing
         #region Struct
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_TCPROW_OWNER_PID
+        public struct MIB_TCPROW_OWNER_PID : IEquatable<MIB_TCPROW_OWNER_PID>
         {
             public uint state;
             public uint localAddr;
@@ -86,10 +86,7 @@ namespace ACT.FFXIVPing
 
             public ushort LocalPort
             {
-                get
-                {
-                    return BitConverter.ToUInt16(new byte[2] { localPort[1], localPort[0] }, 0);
-                }
+                get { return BitConverter.ToUInt16(new byte[2] {localPort[1], localPort[0]}, 0); }
             }
 
             public IPAddress RemoteAddress
@@ -99,15 +96,48 @@ namespace ACT.FFXIVPing
 
             public ushort RemotePort
             {
-                get
-                {
-                    return BitConverter.ToUInt16(new byte[2] { remotePort[1], remotePort[0] }, 0);
-                }
+                get { return BitConverter.ToUInt16(new byte[2] {remotePort[1], remotePort[0]}, 0); }
             }
 
             public MIB_TCP_STATE State
             {
-                get { return (MIB_TCP_STATE)state; }
+                get { return (MIB_TCP_STATE) state; }
+            }
+
+            public bool Equals(MIB_TCPROW_OWNER_PID other)
+            {
+                return localAddr == other.localAddr && Equals(localPort, other.localPort) &&
+                       remoteAddr == other.remoteAddr && Equals(remotePort, other.remotePort) &&
+                       owningPid == other.owningPid;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                return obj is MIB_TCPROW_OWNER_PID && Equals((MIB_TCPROW_OWNER_PID) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    var hashCode = (int) localAddr;
+                    hashCode = (hashCode * 397) ^ (localPort != null ? localPort.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (int) remoteAddr;
+                    hashCode = (hashCode * 397) ^ (remotePort != null ? remotePort.GetHashCode() : 0);
+                    hashCode = (hashCode * 397) ^ (int) owningPid;
+                    return hashCode;
+                }
+            }
+
+            public static bool operator ==(MIB_TCPROW_OWNER_PID left, MIB_TCPROW_OWNER_PID right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(MIB_TCPROW_OWNER_PID left, MIB_TCPROW_OWNER_PID right)
+            {
+                return !left.Equals(right);
             }
         }
 
@@ -120,10 +150,22 @@ namespace ACT.FFXIVPing
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct TCP_ESTATS_PATH_RW_v0
+        public struct TCP_ESTATS_DATA_ROD_v0
         {
-            [MarshalAs(UnmanagedType.I1)]
-            public bool EnableCollection;
+            public ulong DataBytesOut;
+            public ulong DataSegsOut;
+            public ulong DataBytesIn;
+            public ulong DataSegsIn;
+            public ulong SegsOut;
+            public ulong SegsIn;
+            public uint SoftErrors;
+            public uint SoftErrorReason;
+            public uint SndUna;
+            public uint SndNxt;
+            public uint SndMax;
+            public ulong ThruBytesAcked;
+            public uint RcvNxt;
+            public ulong ThruBytesReceived;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -224,7 +266,7 @@ namespace ACT.FFXIVPing
             return tTable;
         }
 
-        public static bool GetPerTcpConnectionEStats(MIB_TCPROW_OWNER_PID row, ref TCP_ESTATS_PATH_ROD_v0 stats)
+        public static bool GetPerTcpConnectionEStats<TOut>(MIB_TCPROW_OWNER_PID row, TCP_ESTATS_TYPE statsType, ref TOut stats)
         {
             var buffRow = IntPtr.Zero;
             var buffOD = IntPtr.Zero;
@@ -232,19 +274,19 @@ namespace ACT.FFXIVPing
             {
                 buffRow = Marshal.AllocHGlobal(Marshal.SizeOf(row));
                 Marshal.StructureToPtr(row, buffRow, false);
-                buffOD = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(TCP_ESTATS_PATH_ROD_v0)));
+                buffOD = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(TOut)));
 
-                var result = GetPerTcpConnectionEStats(buffRow, TCP_ESTATS_TYPE.TcpConnectionEstatsPath,
+                var result = GetPerTcpConnectionEStats(buffRow, statsType,
                     IntPtr.Zero, 0, 0,
                     IntPtr.Zero, 0, 0,
-                    buffOD, 0, (uint) Marshal.SizeOf(typeof(TCP_ESTATS_PATH_ROD_v0)));
+                    buffOD, 0, (uint) Marshal.SizeOf(typeof(TOut)));
 
                 if (result != 0)
                 {
                     return false;
                 }
 
-                stats = (TCP_ESTATS_PATH_ROD_v0) Marshal.PtrToStructure(buffOD, typeof(TCP_ESTATS_PATH_ROD_v0));
+                stats = (TOut) Marshal.PtrToStructure(buffOD, typeof(TOut));
             }
             finally
             {
