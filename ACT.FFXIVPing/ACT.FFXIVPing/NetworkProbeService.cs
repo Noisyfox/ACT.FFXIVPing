@@ -118,7 +118,7 @@ namespace ACT.FFXIVPing
                 var stData = record.StasticData;
                 var stPath = record.StasticPath;
 
-                TTL = stPath.SmoothedRtt;
+                TTL = stPath.SampleRtt;
 
                 // TODO: Calculate pkt lost
                 while ((_stasticRecords.Count > 0
