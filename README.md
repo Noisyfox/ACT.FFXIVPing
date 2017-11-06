@@ -3,7 +3,7 @@
 # ACT.FFXIVPing
 A simple plugin displays network ping in a small overlay
 
-# How It Looks Like
+# How It Looks
 
 ![screenshot1](https://github.com/Noisyfox/ACT.FFXIVPing/blob/master/art/screenshot-1.png)
 
