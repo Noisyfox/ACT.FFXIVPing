@@ -58,6 +58,13 @@ namespace ACT.FFXIVPing
             TcpConnectionEstatsMaximum,
         }
 
+        public enum TCP_BOOLEAN_OPTIONAL
+        {
+            TcpBoolOptDisabled = 0,
+            TcpBoolOptEnabled = 1,
+            TcpBoolOptUnchanged = -1
+        }
+
         #endregion
 
         #region Struct
@@ -169,6 +176,13 @@ namespace ACT.FFXIVPing
         }
 
         [StructLayout(LayoutKind.Sequential)]
+        struct TCP_ESTATS_DATA_RW_v0
+        {
+            [MarshalAs(UnmanagedType.U1)]
+            public bool EnableCollection;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
         public struct TCP_ESTATS_PATH_ROD_v0
         {
             public uint FastRetran;
@@ -213,6 +227,13 @@ namespace ACT.FFXIVPing
             public uint SpuriousRtoDetections;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        struct TCP_ESTATS_PATH_RW_v0
+        {
+            [MarshalAs(UnmanagedType.U1)]
+            public bool EnableCollection;
+        }
+
         #endregion
 
         #region Import
@@ -223,11 +244,17 @@ namespace ACT.FFXIVPing
 
         [DllImport("iphlpapi.dll", SetLastError = true)]
         static extern uint GetPerTcpConnectionEStats(IntPtr row, TCP_ESTATS_TYPE statsType,
-            IntPtr w, uint wVersion, uint wSize,
-            IntPtr os, uint osVersion, uint osSize,
-            IntPtr od, uint odVersion, uint odSize);
+            IntPtr rw, uint rwVersion, uint rwSize,
+            IntPtr ros, uint rosVersion, uint rosSize,
+            IntPtr rod, uint rodVersion, uint rodSize);
+
+        [DllImport("iphlpapi.dll", SetLastError = true)]
+        static extern uint SetPerTcpConnectionEStats(IntPtr row, TCP_ESTATS_TYPE statsType,
+            IntPtr rw, uint rwVersion, uint rwSize, uint offset);
 
         #endregion
+
+        #region Wrap
 
         public static MIB_TCPROW_OWNER_PID[] GetAllTcpConnections()
         {
@@ -266,27 +293,30 @@ namespace ACT.FFXIVPing
             return tTable;
         }
 
-        public static bool GetPerTcpConnectionEStats<TOut>(MIB_TCPROW_OWNER_PID row, TCP_ESTATS_TYPE statsType, ref TOut stats)
+        public static bool GetPerTcpConnectionEStats<TRW, TROD>(MIB_TCPROW_OWNER_PID row, TCP_ESTATS_TYPE statsType, ref TRW rw, ref TROD rod)
         {
             var buffRow = IntPtr.Zero;
-            var buffOD = IntPtr.Zero;
+            var buffRW = IntPtr.Zero;
+            var buffROD = IntPtr.Zero;
             try
             {
                 buffRow = Marshal.AllocHGlobal(Marshal.SizeOf(row));
                 Marshal.StructureToPtr(row, buffRow, false);
-                buffOD = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(TOut)));
+                buffRW = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(TRW)));
+                buffROD = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(TROD)));
 
                 var result = GetPerTcpConnectionEStats(buffRow, statsType,
+                    buffRW, 0, (uint)Marshal.SizeOf(typeof(TRW)),
                     IntPtr.Zero, 0, 0,
-                    IntPtr.Zero, 0, 0,
-                    buffOD, 0, (uint) Marshal.SizeOf(typeof(TOut)));
+                    buffROD, 0, (uint)Marshal.SizeOf(typeof(TROD)));
 
                 if (result != 0)
                 {
                     return false;
                 }
 
-                stats = (TOut) Marshal.PtrToStructure(buffOD, typeof(TOut));
+                rw = (TRW)Marshal.PtrToStructure(buffRW, typeof(TRW));
+                rod = (TROD)Marshal.PtrToStructure(buffROD, typeof(TROD));
             }
             finally
             {
@@ -295,12 +325,118 @@ namespace ACT.FFXIVPing
                 {
                     Marshal.FreeHGlobal(buffRow);
                 }
-                if (buffOD != IntPtr.Zero)
+                if (buffRW != IntPtr.Zero)
                 {
-                    Marshal.FreeHGlobal(buffOD);
+                    Marshal.FreeHGlobal(buffRW);
+                }
+                if (buffROD != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buffROD);
                 }
             }
             return true;
         }
+
+        public static bool SetPerTcpConnectionEStats<TRW>(MIB_TCPROW_OWNER_PID row,
+            TCP_ESTATS_TYPE statsType, ref TRW rw, string fieldName)
+        {
+            var offset = (uint)Marshal.OffsetOf(typeof(TRW), fieldName);
+
+            var buffRow = IntPtr.Zero;
+            var buffRW = IntPtr.Zero;
+            try
+            {
+                buffRow = Marshal.AllocHGlobal(Marshal.SizeOf(row));
+                Marshal.StructureToPtr(row, buffRow, false);
+                buffRW = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(TRW)));
+                Marshal.StructureToPtr(rw, buffRW, false);
+
+                var result = SetPerTcpConnectionEStats(buffRow, statsType,
+                    buffRW, 0, (uint)Marshal.SizeOf(typeof(TRW)), offset);
+
+                if (result != 0)
+                {
+                    return false;
+                }
+            }
+            finally
+            {
+                // Free the Memory
+                if (buffRow != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buffRow);
+                }
+                if (buffRW != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buffRW);
+                }
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region Helper
+
+        public static bool GetPerTcpConnectionEStats_Data(MIB_TCPROW_OWNER_PID row, ref TCP_ESTATS_DATA_ROD_v0 rod)
+        {
+            var rw = new TCP_ESTATS_DATA_RW_v0();
+
+            if (!GetPerTcpConnectionEStats(row, TCP_ESTATS_TYPE.TcpConnectionEstatsData, ref rw, ref rod))
+            {
+                return false;
+            }
+
+            if (rw.EnableCollection)
+            {
+                return true;
+            }
+
+            rw.EnableCollection = true;
+            if (!SetPerTcpConnectionEStats(row, TCP_ESTATS_TYPE.TcpConnectionEstatsData, ref rw,
+                nameof(rw.EnableCollection)))
+            {
+                return false;
+            }
+
+            if (!GetPerTcpConnectionEStats(row, TCP_ESTATS_TYPE.TcpConnectionEstatsData, ref rw, ref rod))
+            {
+                return false;
+            }
+
+            return rw.EnableCollection;
+        }
+
+        public static bool GetPerTcpConnectionEStats_Path(MIB_TCPROW_OWNER_PID row, ref TCP_ESTATS_PATH_ROD_v0 rod)
+        {
+            var rw = new TCP_ESTATS_PATH_RW_v0();
+
+            if (!GetPerTcpConnectionEStats(row, TCP_ESTATS_TYPE.TcpConnectionEstatsPath, ref rw, ref rod))
+            {
+                return false;
+            }
+
+            if (rw.EnableCollection)
+            {
+                return true;
+            }
+
+            rw.EnableCollection = true;
+            if (!SetPerTcpConnectionEStats(row, TCP_ESTATS_TYPE.TcpConnectionEstatsPath, ref rw,
+                nameof(rw.EnableCollection)))
+            {
+                return false;
+            }
+
+            if (!GetPerTcpConnectionEStats(row, TCP_ESTATS_TYPE.TcpConnectionEstatsPath, ref rw, ref rod))
+            {
+                return false;
+            }
+
+            return rw.EnableCollection;
+        }
+
+        #endregion
+
     }
 }

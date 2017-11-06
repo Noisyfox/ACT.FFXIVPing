@@ -98,7 +98,19 @@ namespace ACT.FFXIVPing
             }
 
             _lastPid = ctx.Pid;
-            _controller.NotifyOverlayContentChanged(false, $"Ping {ctx.TTL}ms, {ctx.Lost}% Pkt Lost");
+
+            var ttl = ctx.TTL;
+            string ttlStr;
+            if (ttl == -1)
+            {
+                ttlStr = "N/A";
+            }
+            else
+            {
+                ttlStr = $"{ttl}ms";
+            }
+
+            _controller.NotifyOverlayContentChanged(false, $"Ping {ttlStr}, {ctx.Lost}% Pkt Lost");
         }
 
         private class ConnectionContext
@@ -109,7 +121,7 @@ namespace ACT.FFXIVPing
             private readonly LinkedList<ConnectionStasticRecord> _stasticRecords =
                 new LinkedList<ConnectionStasticRecord>();
 
-            public uint TTL;
+            public int TTL;
             public uint Lost;
 
             public void Update(ConnectionStasticRecord record)
@@ -118,7 +130,7 @@ namespace ACT.FFXIVPing
                 var stData = record.StasticData;
                 var stPath = record.StasticPath;
 
-                TTL = stPath.SampleRtt;
+                TTL = (int)stPath.SampleRtt;
 
                 // TODO: Calculate pkt lost
                 while ((_stasticRecords.Count > 0
@@ -152,7 +164,7 @@ namespace ACT.FFXIVPing
 
             public uint Pid;
 
-            public uint TTL;
+            public int TTL;
             public uint Lost;
 
             public void Update(List<ConnectionStasticRecord> records)
@@ -258,8 +270,8 @@ namespace ACT.FFXIVPing
                                         var stasticData = new Win32PInvoke_iphlpapi.TCP_ESTATS_DATA_ROD_v0();
                                         var stasticPath = new Win32PInvoke_iphlpapi.TCP_ESTATS_PATH_ROD_v0();
                                         if (
-                                            Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats(row, Win32PInvoke_iphlpapi.TCP_ESTATS_TYPE.TcpConnectionEstatsData, ref stasticData)
-                                            && Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats(row, Win32PInvoke_iphlpapi.TCP_ESTATS_TYPE.TcpConnectionEstatsPath, ref stasticPath)
+                                            Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats_Data(row, ref stasticData)
+                                            && Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats_Path(row, ref stasticPath)
                                             )
                                         {
                                             var record = new ConnectionStasticRecord
