@@ -15,3 +15,8 @@ Please follow the instructions [here](https://github.com/Noisyfox/ACT.FFXIVTrans
 
 # Notice
 The packet loss measurement algorithm is very rough in current version. It's highly likely to give you a much larger value than the real situation.
+
+# Q & A
+> Q: My ACT window get resized after enable this plugin
+
+See https://github.com/Noisyfox/ACT.FFXIVTranslate/wiki/Fix-ACT-window-scale-down
