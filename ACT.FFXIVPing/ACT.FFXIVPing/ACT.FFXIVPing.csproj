@@ -128,6 +128,16 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\machina\Machina.FFXIV\Machina.FFXIV.csproj">
+      <Project>{4303e4f0-4c90-44eb-90c2-691451fe49e7}</Project>
+      <Name>Machina.FFXIV</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\machina\Machina\Machina.csproj">
+      <Project>{2681c607-a075-4070-be13-34f0a395119e}</Project>
+      <Name>Machina</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
