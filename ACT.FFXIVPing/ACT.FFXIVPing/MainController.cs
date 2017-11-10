@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -158,6 +159,15 @@ namespace ACT.FFXIVPing
         public void NotifyShortcutFired(bool fromView, Shortcut shortcut)
         {
             ShortcutFired?.Invoke(fromView, shortcut);
+        }
+
+        public delegate void OnGameProcessUpdated(bool fromView, HashSet<int> pids);
+
+        public event OnGameProcessUpdated GameProcessUpdated;
+
+        public void NotifyGameProcessUpdated(bool fromView, HashSet<int> pids)
+        {
+            GameProcessUpdated?.Invoke(fromView, pids);
         }
 
     }

@@ -44,5 +44,10 @@ namespace ACT.FFXIVPing
         {
             return IsGameExePath(Process.GetProcessById((int) pid).MainModule.FileName);
         }
+
+        public static bool IsGameExeProcess(Process p)
+        {
+            return IsGameExePath(p.MainModule.FileName);
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace ACT.FFXIVPing
 {
     class NetworkProbeService : IPluginComponent
     {
-        private static MainController Controller;
+        private MachinaProbeService _machinaProbeService;
         private MainController _controller;
 
         private readonly ProbeThread _workingThread = new ProbeThread();
@@ -17,9 +17,10 @@ namespace ACT.FFXIVPing
 
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
+            _machinaProbeService = plugin.MachinaService;
             _controller = plugin.Controller;
-            Controller = _controller;
             _controller.ActivatedProcessPathChanged += ControllerOnActivatedProcessPathChanged;
+            _controller.GameProcessUpdated += _workingThread.GameProcessUpdated;
         }
 
         public void PostAttachToAct(FFXIVPingPlugin plugin)
@@ -46,22 +47,22 @@ namespace ACT.FFXIVPing
         {
             if (_contexts.TryGetValue(pid, out var conrtext))
             {
-                DisplayRecord(conrtext);
+                DisplayRecord(conrtext, pid);
             }
             else if (_contexts.TryGetValue(_lastPid, out conrtext))
             {
-                DisplayRecord(conrtext);
+                DisplayRecord(conrtext, pid);
             }
             else
             {
                 var first = _contexts.Values.FirstOrDefault();
                 if (first != null)
                 {
-                    DisplayRecord(first);
+                    DisplayRecord(first, pid);
                 }
                 else
                 {
-                    DisplayRecord(null);
+                    DisplayRecord(null, pid);
                 }
             }
         }
@@ -89,17 +90,28 @@ namespace ACT.FFXIVPing
             DisplayByPid(_currentPid);
         }
 
-        private void DisplayRecord(ProcessContext ctx)
+        private void DisplayRecord(ProcessContext ctx, uint pid)
         {
+            var ttlMachina = _machinaProbeService.FindTTL((int) pid);
+            uint lost = 0;
+            int ttl;
+
             if (ctx == null)
             {
-                _controller.NotifyOverlayContentChanged(false, "No Ping Data...");
-                return;
+                if (ttlMachina == -1)
+                {
+                    _controller.NotifyOverlayContentChanged(false, "No Ping Data...");
+                    return;
+                }
+                ttl = ttlMachina;
             }
+            else
+            {
+                lost = ctx.Lost;
+                ttl = Math.Max(ttlMachina, ctx.TTL);
+            }
+            _lastPid = pid;
 
-            _lastPid = ctx.Pid;
-
-            var ttl = ctx.TTL;
             string ttlStr;
             if (ttl == -1)
             {
@@ -110,7 +122,7 @@ namespace ACT.FFXIVPing
                 ttlStr = $"{ttl}ms";
             }
 
-            _controller.NotifyOverlayContentChanged(false, $"Ping {ttlStr}, {ctx.Lost}% Pkt Lost");
+            _controller.NotifyOverlayContentChanged(false, $"Ping {ttlStr}, {lost}% Pkt Lost");
         }
 
         private class ConnectionContext
@@ -227,6 +239,13 @@ namespace ACT.FFXIVPing
 
         private class ProbeThread : BaseThreading<ProbeContext>
         {
+            private HashSet<int> _gamePids = new HashSet<int>();
+
+            public void GameProcessUpdated(bool fromView, HashSet<int> pids)
+            {
+                _gamePids = pids;
+            }
+
             protected override void DoWork(ProbeContext context)
             {
                 var service = context.Service;
@@ -236,27 +255,12 @@ namespace ACT.FFXIVPing
                 {
                     try
                     {
-                        var connections = Win32PInvoke_iphlpapi.GetAllTcpConnections();
+                        var currentPid = _gamePids;
+                        var connections = currentPid.Count > 0 ? Win32PInvoke_iphlpapi.GetAllTcpConnections() : null;
                         if (connections != null)
                         {
                             var gameConnections = connections
-                                .Where(
-                                    it => it.ProcessId != 0
-                                          && it.ProcessId != 4
-                                          && it.State == Win32PInvoke_iphlpapi.MIB_TCP_STATE.MIB_TCP_STATE_ESTAB
-                                )
-                                .Where(
-                                    it =>
-                                    {
-                                        try
-                                        {
-                                            return Utils.IsGameExeProcess(it.ProcessId);
-                                        }
-                                        catch (Exception)
-                                        {
-                                        }
-                                        return false;
-                                    })
+                                .Where(it => currentPid.Contains((int) it.ProcessId))
                                 .GroupBy(it => it.ProcessId).ToDictionary(g => g.Key, g => g.ToList());
 
                             if (gameConnections.Count > 0)
@@ -270,9 +274,11 @@ namespace ACT.FFXIVPing
                                         var stasticData = new Win32PInvoke_iphlpapi.TCP_ESTATS_DATA_ROD_v0();
                                         var stasticPath = new Win32PInvoke_iphlpapi.TCP_ESTATS_PATH_ROD_v0();
                                         if (
-                                            Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats_Data(row, ref stasticData)
-                                            && Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats_Path(row, ref stasticPath)
-                                            )
+                                            Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats_Data(row,
+                                                ref stasticData)
+                                            && Win32PInvoke_iphlpapi.GetPerTcpConnectionEStats_Path(row,
+                                                ref stasticPath)
+                                        )
                                         {
                                             var record = new ConnectionStasticRecord
                                             {
@@ -291,6 +297,10 @@ namespace ACT.FFXIVPing
                             {
                                 service.SubmitRecords(null);
                             }
+                        }
+                        else
+                        {
+                            service.SubmitRecords(null);
                         }
                     }
                     catch (Exception ex)

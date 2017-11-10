@@ -19,6 +19,8 @@ namespace ACT.FFXIVPing
         private readonly NetworkProbeService _networkProbe = new NetworkProbeService();
         internal UpdateChecker UpdateChecker { get; } = new UpdateChecker();
         private readonly WindowsMessagePump _windowsMessagePump = new WindowsMessagePump();
+        private readonly GameProcessMonitor _gameProcessMonitor = new GameProcessMonitor();
+        internal MachinaProbeService MachinaService { get; } = new MachinaProbeService();
         private ShortkeyManager _shortkeyManager;
 
         private bool _isGameActivated = false;
@@ -47,6 +49,8 @@ namespace ACT.FFXIVPing
 
                 Controller.ActivatedProcessPathChanged += ControllerOnActivatedProcessPathChanged;
 
+                MachinaService.AttachToAct(this);
+                _gameProcessMonitor.AttachToAct(this);
                 _networkProbe.AttachToAct(this);
                 _windowsMessagePump.AttachToAct(this);
                 UpdateChecker.AttachToAct(this);
@@ -57,6 +61,8 @@ namespace ACT.FFXIVPing
                 Settings.PostAttachToAct(this);
                 OverlayWPF.PostAttachToAct(this);
                 SettingsTab.PostAttachToAct(this);
+                MachinaService.PostAttachToAct(this);
+                _gameProcessMonitor.PostAttachToAct(this);
                 _networkProbe.PostAttachToAct(this);
                 _windowsMessagePump.PostAttachToAct(this);
                 UpdateChecker.PostAttachToAct(this);
@@ -97,6 +103,9 @@ namespace ACT.FFXIVPing
 
         public void DeInitPlugin()
         {
+            _gameProcessMonitor.Stop();
+            MachinaService.Stop();
+
             _shortkeyManager?.Dispose();
             _shortkeyManager = null;
 
