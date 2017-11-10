@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using Machina;
 
 namespace ACT.FFXIVPing
 {
@@ -51,14 +52,14 @@ namespace ACT.FFXIVPing
             }
             else if (_contexts.TryGetValue(_lastPid, out conrtext))
             {
-                DisplayRecord(conrtext, pid);
+                DisplayRecord(conrtext, _lastPid);
             }
             else
             {
                 var first = _contexts.Values.FirstOrDefault();
                 if (first != null)
                 {
-                    DisplayRecord(first, pid);
+                    DisplayRecord(first, first.Pid);
                 }
                 else
                 {
@@ -92,9 +93,12 @@ namespace ACT.FFXIVPing
 
         private void DisplayRecord(ProcessContext ctx, uint pid)
         {
-            var ttlMachina = _machinaProbeService.FindTTL((int) pid);
+            var ttlMachina = _machinaProbeService.FindTTL(pid);
+            var epochMachina = _machinaProbeService.FindEpoch(pid);
             uint lost = 0;
             int ttl;
+
+            _controller.NotifyLogMessageAppend(false, $"ttlMachina={ttlMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
 
             if (ctx == null)
             {
@@ -239,9 +243,9 @@ namespace ACT.FFXIVPing
 
         private class ProbeThread : BaseThreading<ProbeContext>
         {
-            private HashSet<int> _gamePids = new HashSet<int>();
+            private HashSet<uint> _gamePids = new HashSet<uint>();
 
-            public void GameProcessUpdated(bool fromView, HashSet<int> pids)
+            public void GameProcessUpdated(bool fromView, HashSet<uint> pids)
             {
                 _gamePids = pids;
             }
@@ -260,7 +264,7 @@ namespace ACT.FFXIVPing
                         if (connections != null)
                         {
                             var gameConnections = connections
-                                .Where(it => currentPid.Contains((int) it.ProcessId))
+                                .Where(it => currentPid.Contains(it.ProcessId))
                                 .GroupBy(it => it.ProcessId).ToDictionary(g => g.Key, g => g.ToList());
 
                             if (gameConnections.Count > 0)

@@ -45,9 +45,9 @@ namespace ACT.FFXIVPing
                         {
                         }
                         return -1;
-                    }).Where(it => it > 0);
+                    }).Where(it => it > 0).Select(it => (uint) it);
 
-                    context.NotifyGameProcessUpdated(false, new HashSet<int>(ps));
+                    context.NotifyGameProcessUpdated(false, new HashSet<uint>(ps));
 
                     SafeSleep(2000);
                 }

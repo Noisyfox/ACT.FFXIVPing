@@ -161,11 +161,11 @@ namespace ACT.FFXIVPing
             ShortcutFired?.Invoke(fromView, shortcut);
         }
 
-        public delegate void OnGameProcessUpdated(bool fromView, HashSet<int> pids);
+        public delegate void OnGameProcessUpdated(bool fromView, HashSet<uint> pids);
 
         public event OnGameProcessUpdated GameProcessUpdated;
 
-        public void NotifyGameProcessUpdated(bool fromView, HashSet<int> pids)
+        public void NotifyGameProcessUpdated(bool fromView, HashSet<uint> pids)
         {
             GameProcessUpdated?.Invoke(fromView, pids);
         }
