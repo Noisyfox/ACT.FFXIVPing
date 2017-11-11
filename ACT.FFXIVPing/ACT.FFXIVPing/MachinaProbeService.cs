@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using FFXIVPingMachina.FFXIVNetwork;
+using FFXIVPingMachina.PingMonitor;
 using Machina;
 using Machina.FFXIV;
 
@@ -8,8 +10,6 @@ namespace ACT.FFXIVPing
 {
     class MachinaProbeService : IPluginComponent
     {
-        private static DateTime _dt1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         private bool _isStarted = false;
         private readonly ConcurrentDictionary<uint, ProcessContext> _processContexts = new ConcurrentDictionary<uint, ProcessContext>();
 
@@ -102,37 +102,25 @@ namespace ACT.FFXIVPing
         private class ProcessContext
         {
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
+            private readonly PacketMonitor _packetMonitor = new PacketMonitor();
 
             public int CurrentTTL { get; private set; } = -1;
 
             public long LastEpoch { get; private set; } = 0;
 
-//            private long _lastUpdated = 0;
-//            private int _updatedTTL = -1;
-
             public ProcessContext(uint pid)
             {
                 Monitor.ProcessID = pid;
                 Monitor.MonitorType = TCPNetworkMonitor.NetworkMonitorType.RawSocket;
-                Monitor.MessageReceived = MessageReceived;
+                Monitor.MessageReceived = _packetMonitor.MessageReceived;
+                Monitor.MessageSent = _packetMonitor.MessageSent;
+                _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
             }
 
-            private void MessageReceived(long epoch, byte[] message)
+            private void PacketMonitorOnOnPingSample(double ttl, DateTime sampleTime)
             {
-                if (epoch > 0)
-                {
-                    LastEpoch = epoch;
-                    var currentTime = (long) (DateTime.Now.ToUniversalTime() - _dt1970).TotalMilliseconds;
-                    if (currentTime > epoch)
-                    {
-                        CurrentTTL = (int) (currentTime - epoch);
-                    }
-                }
-//                else
-//                {
-//                    
-//                }
-//                var ttl = currentTime - epoch;
+                CurrentTTL = (int) ttl;
+                LastEpoch = sampleTime.EpochMillis();
             }
 
             public void Start()

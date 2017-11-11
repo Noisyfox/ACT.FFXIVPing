@@ -45,12 +45,6 @@
     <Reference Include="GlobalHotKey, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GlobalHotKey.1.1.0\lib\GlobalHotKey.dll</HintPath>
     </Reference>
-    <Reference Include="Machina, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Machina.FFXIV.2.0.1\lib\net40\Machina.dll</HintPath>
-    </Reference>
-    <Reference Include="Machina.FFXIV, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Machina.FFXIV.2.0.1\lib\net40\Machina.FFXIV.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -135,6 +129,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FFXIVPingMachina\LibPingMachina\LibPingMachina.csproj">
+      <Project>{f0963e2b-d2be-4a07-a7bd-e9b9ba07d050}</Project>
+      <Name>LibPingMachina</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIVPingMachina\machina\Machina.FFXIV\Machina.FFXIV.csproj">
+      <Project>{4303e4f0-4c90-44eb-90c2-691451fe49e7}</Project>
+      <Name>Machina.FFXIV</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FFXIVPingMachina\machina\Machina\Machina.csproj">
+      <Project>{2681c607-a075-4070-be13-34f0a395119e}</Project>
+      <Name>Machina</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

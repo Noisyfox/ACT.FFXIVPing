@@ -1,0 +1,3 @@
+[submodule "ACT.FFXIVPing/FFXIVPingMachina"]
+	path = ACT.FFXIVPing/FFXIVPingMachina
+	url = https://github.com/Noisyfox/FFXIVPingMachina.git

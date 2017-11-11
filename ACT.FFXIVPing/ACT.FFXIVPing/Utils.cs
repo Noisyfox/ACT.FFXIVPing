@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows;
@@ -10,12 +9,6 @@ namespace ACT.FFXIVPing
 {
     internal static class Utils
     {
-        public static long TimestampMillisFromDateTime(DateTime date)
-        {
-            var unixTimestamp = date.Ticks - new DateTime(1970, 1, 1).Ticks;
-            unixTimestamp /= TimeSpan.TicksPerMillisecond;
-            return unixTimestamp;
-        }
 
         public static bool IsGameExePath(string path)
         {
