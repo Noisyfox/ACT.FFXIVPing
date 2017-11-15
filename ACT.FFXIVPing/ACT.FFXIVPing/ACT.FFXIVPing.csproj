@@ -147,6 +147,10 @@
     <Resource Include="ILMergeOrder.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ACT.FoxCommon\ACT.FoxCommon\ACT.FoxCommon.csproj">
+      <Project>{78342b89-6baa-43e8-824a-a6fb06cde993}</Project>
+      <Name>ACT.FoxCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FFXIVPingMachina\LibPingMachina\LibPingMachina.csproj">
       <Project>{f0963e2b-d2be-4a07-a7bd-e9b9ba07d050}</Project>
       <Name>LibPingMachina</Name>
