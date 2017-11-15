@@ -96,11 +96,11 @@ namespace ACT.FFXIVPing
         private void DisplayRecord(ProcessContext ctx, uint pid)
         {
             var ttlMachina = _machinaProbeService.FindTTL(pid);
-            var epochMachina = _machinaProbeService.FindEpoch(pid);
+//            var epochMachina = _machinaProbeService.FindEpoch(pid);
             uint lost = 0;
             int ttl;
 
-            _controller.NotifyLogMessageAppend(false, $"ttlMachina={ttlMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
+//            _controller.NotifyLogMessageAppend(false, $"ttlMachina={ttlMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
 
             if (ctx == null)
             {
