@@ -14,6 +14,8 @@ before_build:
     git submodule update --init --recursive
     
     nuget restore ACT.FFXIVPing
+
+    cp MSBuild.ILMerge.Task.targets .\ACT.FFXIVPing\packages\MSBuild.ILMerge.Task.1.0.5\build\MSBuild.ILMerge.Task.targets
 build:
   project: ACT.FFXIVPing/ACT.FFXIVPing.sln
   verbosity: minimal
