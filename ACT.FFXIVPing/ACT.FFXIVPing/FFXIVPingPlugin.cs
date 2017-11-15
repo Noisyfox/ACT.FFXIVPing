@@ -18,7 +18,7 @@ namespace ACT.FFXIVPing
         public PingWindow OverlayWPF { get; private set; }
         private readonly NetworkProbeService _networkProbe = new NetworkProbeService();
         internal UpdateChecker UpdateChecker { get; } = new UpdateChecker();
-        private readonly WindowsMessagePump<MainController, FFXIVPingPlugin> _windowsMessagePump = new WindowsMessagePump<MainController, FFXIVPingPlugin>();
+        private readonly WindowsMessagePumpBase<MainController, FFXIVPingPlugin> _windowsMessagePump = new WindowsMessagePumpBase<MainController, FFXIVPingPlugin>();
         private readonly GameProcessMonitor _gameProcessMonitor = new GameProcessMonitor();
         internal MachinaProbeService MachinaService { get; } = new MachinaProbeService();
         private ShortkeyManager<MainController, FFXIVPingPlugin> _shortkeyManager;

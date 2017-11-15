@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using ACT.FoxCommon;
 using ACT.FoxCommon.update;
 
 namespace ACT.FFXIVPing
