@@ -2,15 +2,15 @@
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using ACT.FFXIVPing.localization;
-using Advanced_Combat_Tracker;
+using ACT.FoxCommon;
+using ACT.FoxCommon.core;
 
 namespace ACT.FFXIVPing
 {
-    public class FFXIVPingPlugin : IActPluginV1
+    public class FFXIVPingPlugin : PluginBase<MainController>
     {
         private bool _settingsLoaded = false;
 
-        internal MainController Controller { get; private set; }
         public SettingsHolder Settings { get; private set; }
         public TabPage ParentTabPage { get; private set; }
         public Label StatusLabel { get; private set; }
@@ -18,14 +18,14 @@ namespace ACT.FFXIVPing
         public PingWindow OverlayWPF { get; private set; }
         private readonly NetworkProbeService _networkProbe = new NetworkProbeService();
         internal UpdateChecker UpdateChecker { get; } = new UpdateChecker();
-        private readonly WindowsMessagePump _windowsMessagePump = new WindowsMessagePump();
+        private readonly WindowsMessagePump<MainController, FFXIVPingPlugin> _windowsMessagePump = new WindowsMessagePump<MainController, FFXIVPingPlugin>();
         private readonly GameProcessMonitor _gameProcessMonitor = new GameProcessMonitor();
         internal MachinaProbeService MachinaService { get; } = new MachinaProbeService();
-        private ShortkeyManager _shortkeyManager;
+        private ShortkeyManager<MainController, FFXIVPingPlugin> _shortkeyManager;
 
         private bool _isGameActivated = false;
 
-        public void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
+        public override void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
         {
             _settingsLoaded = false;
             ParentTabPage = pluginScreenSpace;
@@ -55,7 +55,7 @@ namespace ACT.FFXIVPing
                 _windowsMessagePump.AttachToAct(this);
                 UpdateChecker.AttachToAct(this);
 
-                _shortkeyManager = new ShortkeyManager();
+                _shortkeyManager = new ShortkeyManager<MainController, FFXIVPingPlugin>();
                 _shortkeyManager.AttachToAct(this);
 
                 Settings.PostAttachToAct(this);
@@ -101,7 +101,7 @@ namespace ACT.FFXIVPing
             SettingsTab.DoLocalization();
         }
 
-        public void DeInitPlugin()
+        public override void DeInitPlugin()
         {
             _gameProcessMonitor.Stop();
             MachinaService.Stop();
@@ -130,14 +130,7 @@ namespace ACT.FFXIVPing
         }
     }
 
-    public interface IPluginComponent
+    public interface IPluginComponent: IPluginComponentBase<MainController, FFXIVPingPlugin>
     {
-        void AttachToAct(FFXIVPingPlugin plugin);
-        void PostAttachToAct(FFXIVPingPlugin plugin);
-    }
-
-    internal enum Shortcut
-    {
-        HideOverlay
     }
 }

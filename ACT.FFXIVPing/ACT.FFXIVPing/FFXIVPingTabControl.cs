@@ -4,6 +4,10 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using ACT.FFXIVPing.localization;
+using ACT.FoxCommon;
+using ACT.FoxCommon.localization;
+using ACT.FoxCommon.shortcut;
+using ACT.FoxCommon.update;
 using Advanced_Combat_Tracker;
 
 namespace ACT.FFXIVPing
@@ -18,8 +22,8 @@ namespace ACT.FFXIVPing
         {
             InitializeComponent();
 
-            comboBoxLanguage.DisplayMember = "DisplayName";
-            comboBoxLanguage.ValueMember = "LangCode";
+            comboBoxLanguage.DisplayMember = nameof(LanguageDef.DisplayName);
+            comboBoxLanguage.ValueMember = nameof(LanguageDef.LangCode);
             comboBoxLanguage.DataSource = Localization.SupportedLanguages;
 
             labelCurrentVersionValue.Text = Assembly.GetCallingAssembly().GetName().Version.ToString();
@@ -75,7 +79,7 @@ namespace ACT.FFXIVPing
 
         public void DoLocalization()
         {
-            Localization.TranslateControls(this);
+            LocalizationBase.TranslateControls(this);
 
             labelLatestStableVersionValue.Text = strings.versionUnknown;
             labelLatestVersionValue.Text = strings.versionUnknown;
@@ -142,7 +146,7 @@ namespace ACT.FFXIVPing
         {
             var dialog = new ShortcutDialog
             {
-                CurrentKey = ShortkeyManager.StringToKey(_plugin.Settings.ShortcutHide)
+                CurrentKey = ShortkeyUtils.StringToKey(_plugin.Settings.ShortcutHide)
             };
             var result = dialog.ShowDialog();
 
@@ -150,7 +154,7 @@ namespace ACT.FFXIVPing
             {
                 var key = dialog.CurrentKey;
 
-                _controller.NotifyShortcutChanged(true, Shortcut.HideOverlay, key);
+                _controller.NotifyShortcutChanged(true, PluginShortcut.HideOverlay, key);
             }
         }
 
@@ -184,7 +188,7 @@ namespace ACT.FFXIVPing
             {
                 return;
             }
-            var ld = localization.Localization.GetLanguage(lang);
+            var ld = LocalizationBase.GetLanguage(lang);
             _controller.NotifyLanguageChanged(true, ld.LangCode);
             comboBoxLanguage.SelectedValue = ld.LangCode;
         }
@@ -216,7 +220,7 @@ namespace ACT.FFXIVPing
             }
         }
 
-        private void ControllerOnVersionChecked(bool fromView, UpdateChecker.VersionInfo versionInfo, bool forceNotify)
+        private void ControllerOnVersionChecked(bool fromView, VersionInfo versionInfo, bool forceNotify)
         {
             if (InvokeRequired)
             {
@@ -245,33 +249,33 @@ namespace ACT.FFXIVPing
             }
         }
 
-        private void ControllerOnShortcutChanged(bool fromView, Shortcut shortcut, Keys key)
+        private void ControllerOnShortcutChanged(bool fromView, PluginShortcut shortcut, Keys key)
         {
-            var str = ShortkeyManager.KeyToString(key);
+            var str = ShortkeyUtils.KeyToString(key);
 
             switch (shortcut)
             {
-                case Shortcut.HideOverlay:
+                case PluginShortcut.HideOverlay:
                     buttonShortcutHide.Text = str;
                     break;
             }
         }
 
-        private void ControllerOnShortcutRegister(bool fromView, Shortcut shortcut, bool isRegister, bool success)
+        private void ControllerOnShortcutRegister(bool fromView, PluginShortcut shortcut, bool isRegister, bool success)
         {
             switch (shortcut)
             {
-                case Shortcut.HideOverlay:
+                case PluginShortcut.HideOverlay:
                     UpdateHotkeyControlColor(buttonShortcutHide, isRegister, success);
                     break;
             }
         }
 
-        private void ControllerOnShortcutFired(bool fromView, Shortcut shortcut)
+        private void ControllerOnShortcutFired(bool fromView, PluginShortcut shortcut)
         {
             switch (shortcut)
             {
-                case Shortcut.HideOverlay:
+                case PluginShortcut.HideOverlay:
                     checkBoxShowOverlay.Checked = !checkBoxShowOverlay.Checked;
                     break;
             }
@@ -302,7 +306,7 @@ namespace ACT.FFXIVPing
             return isRegister ? Color.Green : Color.Empty;
         }
 
-        private UpdateChecker.PublishVersion IsNewVersion(UpdateChecker.PublishVersion newVersion)
+        private PublishVersion IsNewVersion(PublishVersion newVersion)
         {
             if (newVersion == null)
             {
@@ -320,7 +324,7 @@ namespace ACT.FFXIVPing
             return v > currentVersion ? newVersion : null;
         }
 
-        private void ShowUpdateResult(UpdateChecker.PublishVersion newVersion, bool forceNotify)
+        private void ShowUpdateResult(PublishVersion newVersion, bool forceNotify)
         {
             if (newVersion == null)
             {

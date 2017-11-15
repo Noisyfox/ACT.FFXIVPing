@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using ACT.FoxCommon.shortcut;
 using Advanced_Combat_Tracker;
 
 namespace ACT.FFXIVPing
@@ -131,7 +132,7 @@ namespace ACT.FFXIVPing
                 _controller.NotifyOverlayFontChanged(true, new Font(FontFamily.GenericSansSerif, 12, FontStyle.Regular));
             }
 
-            _controller.NotifyShortcutChanged(false, Shortcut.HideOverlay, ShortkeyManager.StringToKey(ShortcutHide));
+            _controller.NotifyShortcutChanged(false, PluginShortcut.HideOverlay, ShortkeyUtils.StringToKey(ShortcutHide));
 
             _controller.NotifySettingsLoaded();
         }
@@ -161,17 +162,17 @@ namespace ACT.FFXIVPing
             VersionIgnored = ignoredVersion;
         }
 
-        private void ControllerOnShortcutChanged(bool fromView, Shortcut shortcut, Keys key)
+        private void ControllerOnShortcutChanged(bool fromView, PluginShortcut shortcut, Keys key)
         {
             if (!fromView)
             {
                 return;
             }
 
-            var ks = ShortkeyManager.KeyToString(key);
+            var ks = ShortkeyUtils.KeyToString(key);
             switch (shortcut)
             {
-                case Shortcut.HideOverlay:
+                case PluginShortcut.HideOverlay:
                     ShortcutHide = ks;
                     break;
             }

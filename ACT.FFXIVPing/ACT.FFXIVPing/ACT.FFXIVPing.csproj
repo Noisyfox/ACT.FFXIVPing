@@ -54,14 +54,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Advanced Combat Tracker">
-      <HintPath>3rdparty\Advanced Combat Tracker.exe</HintPath>
+      <HintPath>..\ACT.FoxCommon\ACT.FoxCommon\3rdparty\Advanced Combat Tracker.exe</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="GlobalHotKey, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\GlobalHotKey.1.1.0\lib\GlobalHotKey.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,8 +76,6 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseThreading.cs" />
-    <Compile Include="Ext.cs" />
     <Compile Include="FFXIVPingPlugin.cs" />
     <Compile Include="FFXIVPingTabControl.cs">
       <SubType>UserControl</SubType>
@@ -92,7 +84,6 @@
       <DependentUpon>FFXIVPingTabControl.cs</DependentUpon>
     </Compile>
     <Compile Include="GameProcessMonitor.cs" />
-    <Compile Include="localization\LanguageDef.cs" />
     <Compile Include="localization\Localization.cs" />
     <Compile Include="localization\strings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -101,7 +92,6 @@
     </Compile>
     <Compile Include="MachinaProbeService.cs" />
     <Compile Include="MainController.cs" />
-    <Compile Include="MessageBoxManager.cs" />
     <Compile Include="NetworkProbeService.cs" />
     <Compile Include="PingWindow.xaml.cs">
       <DependentUpon>PingWindow.xaml</DependentUpon>
@@ -110,18 +100,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SettingsHolder.cs" />
-    <Compile Include="ShortcutDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ShortcutDialog.Designer.cs">
-      <DependentUpon>ShortcutDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ShortkeyManager.cs" />
     <Compile Include="UpdateChecker.cs" />
-    <Compile Include="Utils.cs" />
-    <Compile Include="Win32APIUtils.cs" />
     <Compile Include="Win32PInvoke_iphlpapi.cs" />
-    <Compile Include="WindowsMessagePump.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="FFXIVPingTabControl.resx">

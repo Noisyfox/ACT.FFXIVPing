@@ -2,6 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using ACT.FoxCommon;
+using ACT.FoxCommon.core;
 using Machina;
 
 namespace ACT.FFXIVPing
