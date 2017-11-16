@@ -10,12 +10,27 @@ namespace ACT.FFXIVPing
 {
     class MachinaProbeService : IPluginComponent
     {
+        private MainController _controller;
         private bool _isStarted = false;
         private readonly ConcurrentDictionary<uint, ProcessContext> _processContexts = new ConcurrentDictionary<uint, ProcessContext>();
 
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
-            plugin.Controller.GameProcessUpdated += ControllerOnGameProcessUpdated;
+            _controller = plugin.Controller;
+            _controller.GameProcessUpdated += ControllerOnGameProcessUpdated;
+            _controller.AdvancedPingEnabled += ControllerOnAdvancedPingEnabled;
+        }
+
+        private void ControllerOnAdvancedPingEnabled(bool fromView, bool enabled)
+        {
+            if (enabled)
+            {
+                Start();
+            }
+            else
+            {
+                Stop();
+            }
         }
 
         private void ControllerOnGameProcessUpdated(bool fromView, HashSet<uint> pids)
@@ -51,23 +66,18 @@ namespace ACT.FFXIVPing
 
         public void PostAttachToAct(FFXIVPingPlugin plugin)
         {
-            Start();
         }
 
         public int FindTTL(uint pid)
         {
+            if (!_isStarted)
+            {
+                return -1;
+            }
+
             if (_processContexts.TryGetValue(pid, out var ctx))
             {
                 return ctx.CurrentTTL;
-            }
-            return -1;
-        }
-
-        public long FindEpoch(uint pid)
-        {
-            if (_processContexts.TryGetValue(pid, out var ctx))
-            {
-                return ctx.LastEpoch;
             }
             return -1;
         }
@@ -78,6 +88,7 @@ namespace ACT.FFXIVPing
             {
                 Stop();
                 _isStarted = true;
+                _controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) started.");
             }
         }
 
@@ -96,6 +107,7 @@ namespace ACT.FFXIVPing
                     context.Stop();
                 }
                 _processContexts.Clear();
+                _controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) stopped.");
             }
         }
 

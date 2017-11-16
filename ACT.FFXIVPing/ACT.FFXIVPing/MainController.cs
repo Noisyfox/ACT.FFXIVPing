@@ -79,5 +79,31 @@ namespace ACT.FFXIVPing
             OverlayAutoHideChanged?.Invoke(fromView, autoHide);
         }
 
+        public delegate void OnAdvancedPingEnabledDelegate(bool fromView, bool enabled);
+
+        public event OnAdvancedPingEnabledDelegate AdvancedPingEnabled;
+
+        public void NotifyAdvancedPingEnabled(bool fromView, bool enabled)
+        {
+            AdvancedPingEnabled?.Invoke(fromView, enabled);
+        }
+
+        public delegate void OnRefreshIntervalChangedDelegate(bool fromView, double interval);
+
+        public event OnRefreshIntervalChangedDelegate RefreshIntervalChanged;
+
+        public void NotifyRefreshIntervalChanged(bool fromView, double interval)
+        {
+            RefreshIntervalChanged?.Invoke(fromView, interval);
+        }
+
+        public delegate void OnOverlayTextTemplateChangedDelegate(bool fromView, string normal, string noData);
+
+        public event OnOverlayTextTemplateChangedDelegate OverlayTextTemplateChanged;
+
+        public void NotifyOverlayTextTemplateChanged(bool fromView, string normal, string noData)
+        {
+            OverlayTextTemplateChanged?.Invoke(fromView, normal, noData);
+        }
     }
 }

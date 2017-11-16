@@ -141,11 +141,17 @@
   <data name="buttonOk" xml:space="preserve">
     <value>确定</value>
   </data>
+  <data name="buttonResetTexts" xml:space="preserve">
+    <value>重置文字</value>
+  </data>
   <data name="buttonUpdateLater" xml:space="preserve">
     <value>稍后</value>
   </data>
   <data name="buttonUpdateNow" xml:space="preserve">
     <value>更新</value>
+  </data>
+  <data name="checkBoxAdvancedPing" xml:space="preserve">
+    <value>启用高级延迟检测</value>
   </data>
   <data name="checkBoxAutoHide" xml:space="preserve">
     <value>悬浮窗自动隐藏</value>
@@ -162,11 +168,32 @@
   <data name="checkBoxShowOverlay" xml:space="preserve">
     <value>显示悬浮窗</value>
   </data>
+  <data name="defaultOverlayContentNoData" xml:space="preserve">
+    <value>没有数据...</value>
+  </data>
+  <data name="defaultOverlayContentNormal" xml:space="preserve">
+    <value>Ping {ping_ms_na}, 丢包率 {lost}%</value>
+  </data>
   <data name="groupBoxOverlay" xml:space="preserve">
     <value>悬浮窗设置</value>
   </data>
+  <data name="groupBoxTextCustomization" xml:space="preserve">
+    <value>自定义文字</value>
+  </data>
   <data name="groupBoxUpdate" xml:space="preserve">
     <value>插件更新</value>
+  </data>
+  <data name="labelAdvancedPing" xml:space="preserve">
+    <value>* 通过启用高级延迟检测，插件将捕获并读取游戏连接的内容，并使用心跳包计算延迟。
+
+* 这可以得到游戏客户端发送数据包到服务器和接收到响应数据包之间的真实延迟。
+
+* 但是，由于服务器 Tick Rate 的存在，这个延迟可能会比正常的 Ping 值大得多，并且会有较大的波动。
+
+* 如果你使用了任何类型的 VPN 软件那么通常你需要启用这个选项。</value>
+  </data>
+  <data name="labelAvailableVariables" xml:space="preserve">
+    <value>可用变量: {ping} {ping_ms_na} {lost}</value>
   </data>
   <data name="labelCurrentVersion" xml:space="preserve">
     <value>当前版本:</value>
@@ -189,8 +216,17 @@
   <data name="labelOpacity" xml:space="preserve">
     <value>不透明度:</value>
   </data>
+  <data name="labelOverlayContentNoData" xml:space="preserve">
+    <value>没有数据时文字:</value>
+  </data>
+  <data name="labelOverlayContentNormal" xml:space="preserve">
+    <value>正常状态下文字:</value>
+  </data>
   <data name="labelPosition" xml:space="preserve">
     <value>位置</value>
+  </data>
+  <data name="labelRefreshInterval" xml:space="preserve">
+    <value>刷新间隔 (秒):</value>
   </data>
   <data name="labelShortcutHide" xml:space="preserve">
     <value>快捷键:</value>
@@ -212,6 +248,9 @@
   </data>
   <data name="messageWaitKey" xml:space="preserve">
     <value>等待按键...</value>
+  </data>
+  <data name="tabPageAdvanced" xml:space="preserve">
+    <value>高级设置</value>
   </data>
   <data name="tabPageGeneralSettings" xml:space="preserve">
     <value>常规设置</value>

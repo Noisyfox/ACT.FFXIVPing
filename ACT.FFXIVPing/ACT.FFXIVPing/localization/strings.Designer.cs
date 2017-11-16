@@ -133,6 +133,15 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
+        ///   查找类似 重置文字 的本地化字符串。
+        /// </summary>
+        internal static string buttonResetTexts {
+            get {
+                return ResourceManager.GetString("buttonResetTexts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 稍后 的本地化字符串。
         /// </summary>
         internal static string buttonUpdateLater {
@@ -147,6 +156,15 @@ namespace ACT.FFXIVPing.localization {
         internal static string buttonUpdateNow {
             get {
                 return ResourceManager.GetString("buttonUpdateNow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 启用高级延迟检测 的本地化字符串。
+        /// </summary>
+        internal static string checkBoxAdvancedPing {
+            get {
+                return ResourceManager.GetString("checkBoxAdvancedPing", resourceCulture);
             }
         }
         
@@ -196,6 +214,24 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
+        ///   查找类似 没有数据... 的本地化字符串。
+        /// </summary>
+        internal static string defaultOverlayContentNoData {
+            get {
+                return ResourceManager.GetString("defaultOverlayContentNoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Ping {ping_ms_na}, 丢包率 {lost}% 的本地化字符串。
+        /// </summary>
+        internal static string defaultOverlayContentNormal {
+            get {
+                return ResourceManager.GetString("defaultOverlayContentNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 悬浮窗设置 的本地化字符串。
         /// </summary>
         internal static string groupBoxOverlay {
@@ -205,11 +241,44 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
+        ///   查找类似 自定义文字 的本地化字符串。
+        /// </summary>
+        internal static string groupBoxTextCustomization {
+            get {
+                return ResourceManager.GetString("groupBoxTextCustomization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 插件更新 的本地化字符串。
         /// </summary>
         internal static string groupBoxUpdate {
             get {
                 return ResourceManager.GetString("groupBoxUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 * 通过启用高级延迟检测，插件将捕获并读取游戏连接的内容，并使用心跳包计算延迟。
+        ///
+        ///* 这可以得到游戏客户端发送数据包到服务器和接收到响应数据包之间的真实延迟。
+        ///
+        ///* 但是，由于服务器 Tick Rate 的存在，这个延迟可能会比正常的 Ping 值大得多，并且会有较大的波动。
+        ///
+        ///* 如果你使用了任何类型的 VPN 软件那么通常你需要启用这个选项。 的本地化字符串。
+        /// </summary>
+        internal static string labelAdvancedPing {
+            get {
+                return ResourceManager.GetString("labelAdvancedPing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 可用变量: {ping} {ping_ms_na} {lost} 的本地化字符串。
+        /// </summary>
+        internal static string labelAvailableVariables {
+            get {
+                return ResourceManager.GetString("labelAvailableVariables", resourceCulture);
             }
         }
         
@@ -277,11 +346,38 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
+        ///   查找类似 没有数据时文字: 的本地化字符串。
+        /// </summary>
+        internal static string labelOverlayContentNoData {
+            get {
+                return ResourceManager.GetString("labelOverlayContentNoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 正常状态下文字: 的本地化字符串。
+        /// </summary>
+        internal static string labelOverlayContentNormal {
+            get {
+                return ResourceManager.GetString("labelOverlayContentNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 位置 的本地化字符串。
         /// </summary>
         internal static string labelPosition {
             get {
                 return ResourceManager.GetString("labelPosition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 刷新间隔 (秒): 的本地化字符串。
+        /// </summary>
+        internal static string labelRefreshInterval {
+            get {
+                return ResourceManager.GetString("labelRefreshInterval", resourceCulture);
             }
         }
         
@@ -345,6 +441,15 @@ namespace ACT.FFXIVPing.localization {
         internal static string messageWaitKey {
             get {
                 return ResourceManager.GetString("messageWaitKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 高级设置 的本地化字符串。
+        /// </summary>
+        internal static string tabPageAdvanced {
+            get {
+                return ResourceManager.GetString("tabPageAdvanced", resourceCulture);
             }
         }
         

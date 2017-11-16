@@ -8,7 +8,6 @@ using ACT.FoxCommon;
 using ACT.FoxCommon.localization;
 using ACT.FoxCommon.shortcut;
 using ACT.FoxCommon.update;
-using Advanced_Combat_Tracker;
 
 namespace ACT.FFXIVPing
 {
@@ -48,6 +47,8 @@ namespace ACT.FFXIVPing
             settings.AddControlSetting(checkBoxAutoHide);
             settings.AddControlSetting(checkBoxCheckUpdate);
             settings.AddControlSetting(checkBoxNotifyStableOnly);
+            settings.AddControlSetting(checkBoxAdvancedPing);
+            settings.AddControlSetting(numericUpDownRefreshInterval);
 
             _controller = plugin.Controller;
 
@@ -158,12 +159,47 @@ namespace ACT.FFXIVPing
             }
         }
 
+        private void CheckBoxAdvancedPingOnCheckedChanged(object sender, EventArgs eventArgs)
+        {
+            _controller.NotifyAdvancedPingEnabled(true, checkBoxAdvancedPing.Checked);
+        }
+
+        private void NumericUpDownRefreshIntervalOnValueChanged(object sender, EventArgs eventArgs)
+        {
+            _controller.NotifyRefreshIntervalChanged(true, (double)numericUpDownRefreshInterval.Value);
+        }
+
+        private void TextBoxOverlayContentOnTextChanged(object sender, EventArgs eventArgs)
+        {
+            _controller.NotifyOverlayTextTemplateChanged(true, textBoxOverlayContentNormal.Text, textBoxOverlayContentNoData.Text);
+        }
+
+        private void buttonResetTexts_Click(object sender, EventArgs e)
+        {
+            textBoxOverlayContentNormal.Text = strings.defaultOverlayContentNormal;
+            textBoxOverlayContentNoData.Text = strings.defaultOverlayContentNoData;
+        }
+
         private void ControllerOnSettingsLoaded()
         {
             if (checkBoxCheckUpdate.Checked)
             {
                 _plugin.UpdateChecker.CheckUpdate(false);
             }
+
+            checkBoxAdvancedPing.CheckedChanged += CheckBoxAdvancedPingOnCheckedChanged;
+            numericUpDownRefreshInterval.ValueChanged += NumericUpDownRefreshIntervalOnValueChanged;
+
+            var settings = _plugin.Settings;
+            textBoxOverlayContentNormal.Text = settings.OverlayContentNormal ?? strings.defaultOverlayContentNormal;
+            textBoxOverlayContentNoData.Text = settings.OverlayContentNoData ?? strings.defaultOverlayContentNoData;
+
+            textBoxOverlayContentNormal.TextChanged += TextBoxOverlayContentOnTextChanged;
+            textBoxOverlayContentNoData.TextChanged += TextBoxOverlayContentOnTextChanged;
+
+            CheckBoxAdvancedPingOnCheckedChanged(this, EventArgs.Empty);
+            NumericUpDownRefreshIntervalOnValueChanged(this, EventArgs.Empty);
+            TextBoxOverlayContentOnTextChanged(this, EventArgs.Empty);
         }
 
         private void ControllerOnOverlayMoved(bool fromView, int x, int y)

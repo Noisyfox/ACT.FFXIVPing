@@ -117,4 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="labelAdvancedPing.Text" xml:space="preserve">
+    <value>* By enabling advanced ping detection, the plugin will capture and read the contents of your game connection and calculate the latency using the heartbeat packets.
+
+* This will give you the REAL latency between the game client sends a packet to server and receives the response packet.
+
+* However, due to the existence of Server Tick Rate, this latency may be significantly larger than the normal ping value and will have greater volatility.
+
+* This is particularly useful if you are using any sorts of VPN software.</value>
+  </data>
 </root>

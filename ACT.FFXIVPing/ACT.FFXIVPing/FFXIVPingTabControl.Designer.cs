@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FFXIVPingTabControl));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageGeneralSettings = new System.Windows.Forms.TabPage();
             this.groupBoxUpdate = new System.Windows.Forms.GroupBox();
@@ -63,6 +64,20 @@
             this.buttonShortcutHide = new System.Windows.Forms.Button();
             this.buttonFont = new System.Windows.Forms.Button();
             this.textBoxFont = new System.Windows.Forms.TextBox();
+            this.tabPageAdvanced = new System.Windows.Forms.TabPage();
+            this.groupBoxTextCustomization = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.labelOverlayContentNormal = new System.Windows.Forms.Label();
+            this.textBoxOverlayContentNormal = new System.Windows.Forms.TextBox();
+            this.buttonResetTexts = new System.Windows.Forms.Button();
+            this.labelAvailableVariables = new System.Windows.Forms.Label();
+            this.labelOverlayContentNoData = new System.Windows.Forms.Label();
+            this.textBoxOverlayContentNoData = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.checkBoxAdvancedPing = new System.Windows.Forms.CheckBox();
+            this.labelAdvancedPing = new System.Windows.Forms.Label();
+            this.labelRefreshInterval = new System.Windows.Forms.Label();
+            this.numericUpDownRefreshInterval = new System.Windows.Forms.NumericUpDown();
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.richTextBoxLog = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
@@ -75,18 +90,24 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).BeginInit();
+            this.tabPageAdvanced.SuspendLayout();
+            this.groupBoxTextCustomization.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRefreshInterval)).BeginInit();
             this.tabPageLog.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPageGeneralSettings);
+            this.tabControl1.Controls.Add(this.tabPageAdvanced);
             this.tabControl1.Controls.Add(this.tabPageLog);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(697, 487);
+            this.tabControl1.Size = new System.Drawing.Size(618, 496);
             this.tabControl1.TabIndex = 8;
             // 
             // tabPageGeneralSettings
@@ -98,7 +119,7 @@
             this.tabPageGeneralSettings.Location = new System.Drawing.Point(4, 22);
             this.tabPageGeneralSettings.Name = "tabPageGeneralSettings";
             this.tabPageGeneralSettings.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGeneralSettings.Size = new System.Drawing.Size(689, 461);
+            this.tabPageGeneralSettings.Size = new System.Drawing.Size(610, 470);
             this.tabPageGeneralSettings.TabIndex = 0;
             this.tabPageGeneralSettings.Text = "General Settings";
             this.tabPageGeneralSettings.UseVisualStyleBackColor = true;
@@ -106,7 +127,7 @@
             // groupBoxUpdate
             // 
             this.groupBoxUpdate.Controls.Add(this.tableLayoutPanel4);
-            this.groupBoxUpdate.Location = new System.Drawing.Point(6, 246);
+            this.groupBoxUpdate.Location = new System.Drawing.Point(6, 240);
             this.groupBoxUpdate.Name = "groupBoxUpdate";
             this.groupBoxUpdate.Size = new System.Drawing.Size(263, 190);
             this.groupBoxUpdate.TabIndex = 4;
@@ -301,7 +322,7 @@
             this.groupBoxOverlay.Controls.Add(this.tableLayoutPanel1);
             this.groupBoxOverlay.Location = new System.Drawing.Point(6, 43);
             this.groupBoxOverlay.Name = "groupBoxOverlay";
-            this.groupBoxOverlay.Size = new System.Drawing.Size(505, 197);
+            this.groupBoxOverlay.Size = new System.Drawing.Size(505, 191);
             this.groupBoxOverlay.TabIndex = 1;
             this.groupBoxOverlay.TabStop = false;
             this.groupBoxOverlay.Text = "Overlay Settings";
@@ -340,7 +361,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(499, 177);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(499, 171);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // numericUpDownY
@@ -534,13 +555,200 @@
             this.textBoxFont.Size = new System.Drawing.Size(305, 21);
             this.textBoxFont.TabIndex = 15;
             // 
+            // tabPageAdvanced
+            // 
+            this.tabPageAdvanced.AutoScroll = true;
+            this.tabPageAdvanced.Controls.Add(this.groupBoxTextCustomization);
+            this.tabPageAdvanced.Controls.Add(this.tableLayoutPanel2);
+            this.tabPageAdvanced.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAdvanced.Name = "tabPageAdvanced";
+            this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(610, 470);
+            this.tabPageAdvanced.TabIndex = 3;
+            this.tabPageAdvanced.Text = "Advanced Settings";
+            this.tabPageAdvanced.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxTextCustomization
+            // 
+            this.groupBoxTextCustomization.Controls.Add(this.tableLayoutPanel3);
+            this.groupBoxTextCustomization.Location = new System.Drawing.Point(6, 253);
+            this.groupBoxTextCustomization.Name = "groupBoxTextCustomization";
+            this.groupBoxTextCustomization.Size = new System.Drawing.Size(504, 129);
+            this.groupBoxTextCustomization.TabIndex = 1;
+            this.groupBoxTextCustomization.TabStop = false;
+            this.groupBoxTextCustomization.Text = "Text Customization";
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.labelOverlayContentNormal, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxOverlayContentNormal, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.buttonResetTexts, 1, 3);
+            this.tableLayoutPanel3.Controls.Add(this.labelAvailableVariables, 0, 2);
+            this.tableLayoutPanel3.Controls.Add(this.labelOverlayContentNoData, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxOverlayContentNoData, 1, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 17);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 5;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(498, 109);
+            this.tableLayoutPanel3.TabIndex = 0;
+            // 
+            // labelOverlayContentNormal
+            // 
+            this.labelOverlayContentNormal.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelOverlayContentNormal.AutoSize = true;
+            this.labelOverlayContentNormal.Location = new System.Drawing.Point(3, 7);
+            this.labelOverlayContentNormal.Name = "labelOverlayContentNormal";
+            this.labelOverlayContentNormal.Size = new System.Drawing.Size(77, 12);
+            this.labelOverlayContentNormal.TabIndex = 2;
+            this.labelOverlayContentNormal.Text = "Normal Text:";
+            // 
+            // textBoxOverlayContentNormal
+            // 
+            this.textBoxOverlayContentNormal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxOverlayContentNormal.Location = new System.Drawing.Point(92, 3);
+            this.textBoxOverlayContentNormal.Name = "textBoxOverlayContentNormal";
+            this.textBoxOverlayContentNormal.Size = new System.Drawing.Size(403, 21);
+            this.textBoxOverlayContentNormal.TabIndex = 4;
+            this.textBoxOverlayContentNormal.Text = "Ping {ping_ms_na}, {lost}% Pkt Lost";
+            // 
+            // buttonResetTexts
+            // 
+            this.buttonResetTexts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonResetTexts.AutoSize = true;
+            this.buttonResetTexts.Location = new System.Drawing.Point(414, 69);
+            this.buttonResetTexts.Name = "buttonResetTexts";
+            this.buttonResetTexts.Size = new System.Drawing.Size(81, 22);
+            this.buttonResetTexts.TabIndex = 7;
+            this.buttonResetTexts.Text = "Reset Texts";
+            this.buttonResetTexts.UseVisualStyleBackColor = true;
+            this.buttonResetTexts.Click += new System.EventHandler(this.buttonResetTexts_Click);
+            // 
+            // labelAvailableVariables
+            // 
+            this.labelAvailableVariables.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelAvailableVariables.AutoSize = true;
+            this.tableLayoutPanel3.SetColumnSpan(this.labelAvailableVariables, 2);
+            this.labelAvailableVariables.Location = new System.Drawing.Point(3, 54);
+            this.labelAvailableVariables.Name = "labelAvailableVariables";
+            this.labelAvailableVariables.Size = new System.Drawing.Size(492, 12);
+            this.labelAvailableVariables.TabIndex = 6;
+            this.labelAvailableVariables.Text = "Available Variables: {ping} {ping_ms_na} {lost}";
+            // 
+            // labelOverlayContentNoData
+            // 
+            this.labelOverlayContentNoData.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelOverlayContentNoData.AutoSize = true;
+            this.labelOverlayContentNoData.Location = new System.Drawing.Point(3, 34);
+            this.labelOverlayContentNoData.Name = "labelOverlayContentNoData";
+            this.labelOverlayContentNoData.Size = new System.Drawing.Size(83, 12);
+            this.labelOverlayContentNoData.TabIndex = 3;
+            this.labelOverlayContentNoData.Text = "No Data Text:";
+            // 
+            // textBoxOverlayContentNoData
+            // 
+            this.textBoxOverlayContentNoData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxOverlayContentNoData.Location = new System.Drawing.Point(92, 30);
+            this.textBoxOverlayContentNoData.Name = "textBoxOverlayContentNoData";
+            this.textBoxOverlayContentNoData.Size = new System.Drawing.Size(403, 21);
+            this.textBoxOverlayContentNoData.TabIndex = 5;
+            this.textBoxOverlayContentNoData.Text = "No Ping Data...";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Controls.Add(this.checkBoxAdvancedPing, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelAdvancedPing, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 3);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 6);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(499, 241);
+            this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // checkBoxAdvancedPing
+            // 
+            this.checkBoxAdvancedPing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxAdvancedPing.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.checkBoxAdvancedPing, 2);
+            this.checkBoxAdvancedPing.Location = new System.Drawing.Point(3, 3);
+            this.checkBoxAdvancedPing.Name = "checkBoxAdvancedPing";
+            this.checkBoxAdvancedPing.Size = new System.Drawing.Size(493, 16);
+            this.checkBoxAdvancedPing.TabIndex = 0;
+            this.checkBoxAdvancedPing.Text = "Enable Advanced Ping";
+            this.checkBoxAdvancedPing.UseVisualStyleBackColor = true;
+            // 
+            // labelAdvancedPing
+            // 
+            this.labelAdvancedPing.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelAdvancedPing.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.labelAdvancedPing, 2);
+            this.labelAdvancedPing.Enabled = false;
+            this.labelAdvancedPing.Location = new System.Drawing.Point(20, 22);
+            this.labelAdvancedPing.Margin = new System.Windows.Forms.Padding(20, 0, 3, 0);
+            this.labelAdvancedPing.Name = "labelAdvancedPing";
+            this.labelAdvancedPing.Size = new System.Drawing.Size(476, 144);
+            this.labelAdvancedPing.TabIndex = 1;
+            this.labelAdvancedPing.Text = resources.GetString("labelAdvancedPing.Text");
+            // 
+            // labelRefreshInterval
+            // 
+            this.labelRefreshInterval.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelRefreshInterval.AutoSize = true;
+            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 193);
+            this.labelRefreshInterval.Name = "labelRefreshInterval";
+            this.labelRefreshInterval.Size = new System.Drawing.Size(149, 12);
+            this.labelRefreshInterval.TabIndex = 2;
+            this.labelRefreshInterval.Text = "Resampling Interval (s):";
+            // 
+            // numericUpDownRefreshInterval
+            // 
+            this.numericUpDownRefreshInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownRefreshInterval.DecimalPlaces = 1;
+            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 189);
+            this.numericUpDownRefreshInterval.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            this.numericUpDownRefreshInterval.Minimum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericUpDownRefreshInterval.Name = "numericUpDownRefreshInterval";
+            this.numericUpDownRefreshInterval.Size = new System.Drawing.Size(338, 21);
+            this.numericUpDownRefreshInterval.TabIndex = 3;
+            this.numericUpDownRefreshInterval.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // 
             // tabPageLog
             // 
             this.tabPageLog.Controls.Add(this.richTextBoxLog);
             this.tabPageLog.Location = new System.Drawing.Point(4, 22);
             this.tabPageLog.Name = "tabPageLog";
             this.tabPageLog.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageLog.Size = new System.Drawing.Size(689, 540);
+            this.tabPageLog.Size = new System.Drawing.Size(610, 470);
             this.tabPageLog.TabIndex = 2;
             this.tabPageLog.Text = "Log";
             this.tabPageLog.UseVisualStyleBackColor = true;
@@ -551,7 +759,7 @@
             this.richTextBoxLog.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxLog.Name = "richTextBoxLog";
             this.richTextBoxLog.ReadOnly = true;
-            this.richTextBoxLog.Size = new System.Drawing.Size(683, 534);
+            this.richTextBoxLog.Size = new System.Drawing.Size(604, 464);
             this.richTextBoxLog.TabIndex = 6;
             this.richTextBoxLog.Text = "";
             // 
@@ -562,7 +770,7 @@
             this.BackColor = System.Drawing.SystemColors.Window;
             this.Controls.Add(this.tabControl1);
             this.Name = "FFXIVPingTabControl";
-            this.Size = new System.Drawing.Size(697, 487);
+            this.Size = new System.Drawing.Size(618, 496);
             this.tabControl1.ResumeLayout(false);
             this.tabPageGeneralSettings.ResumeLayout(false);
             this.groupBoxUpdate.ResumeLayout(false);
@@ -576,6 +784,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).EndInit();
+            this.tabPageAdvanced.ResumeLayout(false);
+            this.groupBoxTextCustomization.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRefreshInterval)).EndInit();
             this.tabPageLog.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -620,5 +835,19 @@
         private System.Windows.Forms.RichTextBox richTextBoxLog;
         private System.Windows.Forms.Button buttonFont;
         private System.Windows.Forms.TextBox textBoxFont;
+        private System.Windows.Forms.TabPage tabPageAdvanced;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.CheckBox checkBoxAdvancedPing;
+        private System.Windows.Forms.Label labelAdvancedPing;
+        private System.Windows.Forms.Label labelOverlayContentNormal;
+        private System.Windows.Forms.Label labelOverlayContentNoData;
+        private System.Windows.Forms.TextBox textBoxOverlayContentNormal;
+        private System.Windows.Forms.TextBox textBoxOverlayContentNoData;
+        private System.Windows.Forms.Label labelAvailableVariables;
+        private System.Windows.Forms.Button buttonResetTexts;
+        private System.Windows.Forms.GroupBox groupBoxTextCustomization;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Label labelRefreshInterval;
+        private System.Windows.Forms.NumericUpDown numericUpDownRefreshInterval;
     }
 }

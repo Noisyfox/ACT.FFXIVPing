@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ACT.FoxCommon;
 using ACT.FoxCommon.core;
-using Machina;
 
 namespace ACT.FFXIVPing
 {
@@ -18,20 +17,37 @@ namespace ACT.FFXIVPing
         private uint _currentPid;
         private uint _lastPid;
 
+        private string _textTemplateNormal = "Ping {ping}, {lost}% Pkt Lost";
+        private string _textTemplateNoData = "No Ping Data...";
+
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
             _machinaProbeService = plugin.MachinaService;
             _controller = plugin.Controller;
             _controller.ActivatedProcessPathChanged += ControllerOnActivatedProcessPathChanged;
             _controller.GameProcessUpdated += _workingThread.GameProcessUpdated;
+            _controller.RefreshIntervalChanged += ControllerOnRefreshIntervalChanged;
+            _controller.OverlayTextTemplateChanged += ControllerOnOverlayTextTemplateChanged;
         }
 
         public void PostAttachToAct(FFXIVPingPlugin plugin)
         {
+        }
+
+        private void ControllerOnRefreshIntervalChanged(bool fromView, double interval)
+        {
             _workingThread.StartWorkingThread(new ProbeContext
             {
-                Service = this
+                Service = this,
+                Delay = (int)(interval * 1000)
             });
+        }
+
+        private void ControllerOnOverlayTextTemplateChanged(bool fromView, string normal, string noData)
+        {
+            _textTemplateNormal = normal;
+            _textTemplateNoData = noData;
+            DisplayByPid(_currentPid);
         }
 
         public void Stop()
@@ -106,7 +122,7 @@ namespace ACT.FFXIVPing
             {
                 if (ttlMachina == -1)
                 {
-                    _controller.NotifyOverlayContentChanged(false, "No Ping Data...");
+                    _controller.NotifyOverlayContentChanged(false, _textTemplateNoData);
                     return;
                 }
                 ttl = ttlMachina;
@@ -128,7 +144,12 @@ namespace ACT.FFXIVPing
                 ttlStr = $"{ttl}ms";
             }
 
-            _controller.NotifyOverlayContentChanged(false, $"Ping {ttlStr}, {lost}% Pkt Lost");
+            var finalStr = _textTemplateNormal
+                .Replace("{ping}", $"{ttl}")
+                .Replace("{ping_ms_na}", ttlStr)
+                .Replace("{lost}", $"{lost}");
+
+            _controller.NotifyOverlayContentChanged(false, finalStr);
         }
 
         private class ConnectionContext

@@ -94,10 +94,14 @@ namespace ACT.FFXIVPing
 
         public string ShortcutHide { get; set; }
 
+        public string OverlayContentNormal { get; set; }
+
+        public string OverlayContentNoData { get; set; }
+
         #endregion
 
         #region Controller notify
-        
+
         private MainController _controller;
 
         public void AttachToAct(FFXIVPingPlugin plugin)
@@ -106,6 +110,8 @@ namespace ACT.FFXIVPing
             Settings.AddStringSetting(nameof(OverlayFont));
             Settings.AddStringSetting(nameof(VersionIgnored));
             Settings.AddStringSetting(nameof(ShortcutHide));
+            Settings.AddStringSetting(nameof(OverlayContentNormal));
+            Settings.AddStringSetting(nameof(OverlayContentNoData));
 
             _controller = plugin.Controller;
 
@@ -113,6 +119,7 @@ namespace ACT.FFXIVPing
             _controller.OverlayFontChanged += ControllerOnOverlayFontChanged;
             _controller.NewVersionIgnored += ControllerOnNewVersionIgnored;
             _controller.ShortcutChanged += ControllerOnShortcutChanged;
+            _controller.OverlayTextTemplateChanged += ControllerOnOverlayTextTemplateChanged;
         }
 
         public void PostAttachToAct(FFXIVPingPlugin plugin)
@@ -176,6 +183,12 @@ namespace ACT.FFXIVPing
                     ShortcutHide = ks;
                     break;
             }
+        }
+
+        private void ControllerOnOverlayTextTemplateChanged(bool fromView, string normal, string noData)
+        {
+            OverlayContentNormal = normal;
+            OverlayContentNoData = noData;
         }
 
         #endregion
