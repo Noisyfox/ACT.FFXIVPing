@@ -76,6 +76,12 @@ namespace ACT.FFXIVPing
             CheckBoxClickthroughOnCheckedChanged(this, EventArgs.Empty);
             checkBoxShowOverlay_CheckedChanged(this, EventArgs.Empty);
             checkBoxAutoHide_CheckedChanged(this, EventArgs.Empty);
+
+            if (!UpdateChecker.IsEnabled)
+            {
+                // Hide update checker panel
+                groupBoxUpdate.Visible = false;
+            }
         }
 
         public void DoLocalization()
