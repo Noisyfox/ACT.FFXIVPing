@@ -55,11 +55,12 @@ namespace ACT.FFXIVPing
 
                 foreach (var pid in pids)
                 {
-                    _processContexts.AddOrUpdate(pid, _pid => new ProcessContext(_pid), (_pid, _ctx) =>
+                    _processContexts.AddOrUpdate(pid, _pid =>
                     {
-                        _ctx.Stop();
-                        return _ctx;
-                    }).Start();
+                        var ctx = new ProcessContext(_pid);
+                        ctx.Start();
+                        return ctx;
+                    }, (_, _ctx) => _ctx);
                 }
             }
         }
