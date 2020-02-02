@@ -77,6 +77,10 @@ namespace ACT.FFXIVPing
 
                 StatusLabel.Text = "Init Success. >w<";
             }
+            catch (SettingsNotLoadException ex)
+            {
+                StatusLabel.Text = "Init Failed: " + ex;
+            }
             catch (Exception ex)
             {
                 StatusLabel.Text = "Init Failed: " + ex;
