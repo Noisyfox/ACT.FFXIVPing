@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using ACT.FoxCommon;
 using FFXIVPingMachina.FFXIVNetwork;
+using FFXIVPingMachina.FFXIVNetwork.Packets;
 using FFXIVPingMachina.PingMonitor;
 using Machina;
 using Machina.FFXIV;
@@ -10,15 +12,15 @@ namespace ACT.FFXIVPing
 {
     class MachinaProbeService : IPluginComponent
     {
-        private MainController _controller;
+        private FFXIVPingPlugin _plugin;
         private bool _isStarted = false;
         private readonly ConcurrentDictionary<uint, ProcessContext> _processContexts = new ConcurrentDictionary<uint, ProcessContext>();
 
         public void AttachToAct(FFXIVPingPlugin plugin)
         {
-            _controller = plugin.Controller;
-            _controller.GameProcessUpdated += ControllerOnGameProcessUpdated;
-            _controller.AdvancedPingEnabled += ControllerOnAdvancedPingEnabled;
+            _plugin = plugin;
+            plugin.Controller.GameProcessUpdated += ControllerOnGameProcessUpdated;
+            plugin.Controller.AdvancedPingEnabled += ControllerOnAdvancedPingEnabled;
         }
 
         private void ControllerOnAdvancedPingEnabled(bool fromView, bool enabled)
@@ -52,6 +54,8 @@ namespace ACT.FFXIVPing
                         ctx.Stop();
                     }
                 }
+
+                UpdateGameClientVersion();
 
                 foreach (var pid in pids)
                 {
@@ -89,7 +93,7 @@ namespace ACT.FFXIVPing
             {
                 Stop();
                 _isStarted = true;
-                _controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) started.");
+                _plugin.Controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) started.");
             }
         }
 
@@ -108,7 +112,46 @@ namespace ACT.FFXIVPing
                     context.Stop();
                 }
                 _processContexts.Clear();
-                _controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) stopped.");
+                _plugin.Controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) stopped.");
+            }
+        }
+
+        private void UpdateGameClientVersionTo(FFXIVClientVersion clientVersion)
+        {
+            if (clientVersion != PacketMonitor.ClientVersion)
+            {
+                PacketMonitor.ClientVersion = clientVersion;
+                _plugin.Controller.NotifyLogMessageAppend(false, $"Game client version = {clientVersion}.");
+            }
+        }
+
+        private void UpdateGameClientVersion()
+        {
+            switch (_plugin.Settings.GameClientVersion)
+            {
+                case SettingsHolder.GameClientVersions.AutoDetection:
+                    // Detect game version
+                    var version = GameClientInfo.GetLanguage();
+                    if (version.IsGlobalGame())
+                    {
+                        UpdateGameClientVersionTo(FFXIVClientVersion.Global);
+                    }
+                    else if (version == GameClientInfo.GameLanguage.Cn)
+                    {
+                        UpdateGameClientVersionTo(FFXIVClientVersion.CN);
+                    }
+                    else
+                    {
+                        UpdateGameClientVersionTo(FFXIVClientVersion.Unknown);
+                    }
+
+                    break;
+                case SettingsHolder.GameClientVersions.Global:
+                    UpdateGameClientVersionTo(FFXIVClientVersion.Global);
+                    break;
+                case SettingsHolder.GameClientVersions.China:
+                    UpdateGameClientVersionTo(FFXIVClientVersion.CN);
+                    break;
             }
         }
 

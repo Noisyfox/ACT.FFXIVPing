@@ -78,6 +78,8 @@
             this.labelAdvancedPing = new System.Windows.Forms.Label();
             this.labelRefreshInterval = new System.Windows.Forms.Label();
             this.numericUpDownRefreshInterval = new System.Windows.Forms.NumericUpDown();
+            this.labelGameVersion = new System.Windows.Forms.Label();
+            this.comboBoxGameVersion = new System.Windows.Forms.ComboBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.richTextBoxLog = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
@@ -571,7 +573,7 @@
             // groupBoxTextCustomization
             // 
             this.groupBoxTextCustomization.Controls.Add(this.tableLayoutPanel3);
-            this.groupBoxTextCustomization.Location = new System.Drawing.Point(6, 253);
+            this.groupBoxTextCustomization.Location = new System.Drawing.Point(6, 277);
             this.groupBoxTextCustomization.Name = "groupBoxTextCustomization";
             this.groupBoxTextCustomization.Size = new System.Drawing.Size(504, 129);
             this.groupBoxTextCustomization.TabIndex = 1;
@@ -670,17 +672,20 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.checkBoxAdvancedPing, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelAdvancedPing, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 3);
+            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 4);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.labelGameVersion, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.comboBoxGameVersion, 1, 2);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 5;
+            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(499, 241);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(499, 265);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // checkBoxAdvancedPing
@@ -712,7 +717,7 @@
             // 
             this.labelRefreshInterval.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelRefreshInterval.AutoSize = true;
-            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 193);
+            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 219);
             this.labelRefreshInterval.Name = "labelRefreshInterval";
             this.labelRefreshInterval.Size = new System.Drawing.Size(149, 12);
             this.labelRefreshInterval.TabIndex = 2;
@@ -722,7 +727,7 @@
             // 
             this.numericUpDownRefreshInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownRefreshInterval.DecimalPlaces = 1;
-            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 189);
+            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 215);
             this.numericUpDownRefreshInterval.Maximum = new decimal(new int[] {
             60,
             0,
@@ -741,6 +746,30 @@
             0,
             0,
             0});
+            // 
+            // labelGameVersion
+            // 
+            this.labelGameVersion.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelGameVersion.AutoSize = true;
+            this.labelGameVersion.Location = new System.Drawing.Point(3, 173);
+            this.labelGameVersion.Name = "labelGameVersion";
+            this.labelGameVersion.Size = new System.Drawing.Size(125, 12);
+            this.labelGameVersion.TabIndex = 4;
+            this.labelGameVersion.Text = "Game Client Version:";
+            // 
+            // comboBoxGameVersion
+            // 
+            this.comboBoxGameVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxGameVersion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxGameVersion.FormattingEnabled = true;
+            this.comboBoxGameVersion.Items.AddRange(new object[] {
+            "AutoDetect",
+            "Global",
+            "China"});
+            this.comboBoxGameVersion.Location = new System.Drawing.Point(158, 169);
+            this.comboBoxGameVersion.Name = "comboBoxGameVersion";
+            this.comboBoxGameVersion.Size = new System.Drawing.Size(338, 20);
+            this.comboBoxGameVersion.TabIndex = 5;
             // 
             // tabPageLog
             // 
@@ -849,5 +878,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Label labelRefreshInterval;
         private System.Windows.Forms.NumericUpDown numericUpDownRefreshInterval;
+        private System.Windows.Forms.Label labelGameVersion;
+        private System.Windows.Forms.ComboBox comboBoxGameVersion;
     }
 }

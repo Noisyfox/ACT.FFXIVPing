@@ -88,6 +88,15 @@ namespace ACT.FFXIVPing
 
         public string OverlayContentNoData { get; set; }
 
+        public GameClientVersions GameClientVersion { get; set; } = GameClientVersions.AutoDetection;
+
+        public enum GameClientVersions: int
+        {
+            AutoDetection = 0,
+            Global = 1,
+            China = 2,
+        }
+
         #endregion
 
         #region Controller notify
@@ -102,6 +111,7 @@ namespace ACT.FFXIVPing
             Settings.AddStringSetting(nameof(ShortcutHide));
             Settings.AddStringSetting(nameof(OverlayContentNormal));
             Settings.AddStringSetting(nameof(OverlayContentNoData));
+            Settings.AddIntSetting(nameof(GameClientVersion));
 
             _controller = plugin.Controller;
 
