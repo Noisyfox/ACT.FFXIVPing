@@ -90,11 +90,19 @@ namespace ACT.FFXIVPing
 
         public GameClientVersions GameClientVersion { get; set; } = GameClientVersions.AutoDetection;
 
+        public ParseModes ParseMode { get; set; } = ParseModes.Normal;
+
         public enum GameClientVersions: int
         {
             AutoDetection = 0,
             Global = 1,
             China = 2,
+        }
+
+        public enum ParseModes : int
+        {
+            Normal = 0,
+            WinPCap = 1,
         }
 
         #endregion
@@ -112,6 +120,7 @@ namespace ACT.FFXIVPing
             Settings.AddStringSetting(nameof(OverlayContentNormal));
             Settings.AddStringSetting(nameof(OverlayContentNoData));
             Settings.AddIntSetting(nameof(GameClientVersion));
+            Settings.AddIntSetting(nameof(ParseMode));
 
             _controller = plugin.Controller;
 

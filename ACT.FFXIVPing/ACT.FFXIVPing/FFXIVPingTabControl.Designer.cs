@@ -80,6 +80,8 @@
             this.numericUpDownRefreshInterval = new System.Windows.Forms.NumericUpDown();
             this.labelGameVersion = new System.Windows.Forms.Label();
             this.comboBoxGameVersion = new System.Windows.Forms.ComboBox();
+            this.labelParseMode = new System.Windows.Forms.Label();
+            this.comboBoxParseMode = new System.Windows.Forms.ComboBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.richTextBoxLog = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
@@ -573,7 +575,7 @@
             // groupBoxTextCustomization
             // 
             this.groupBoxTextCustomization.Controls.Add(this.tableLayoutPanel3);
-            this.groupBoxTextCustomization.Location = new System.Drawing.Point(6, 277);
+            this.groupBoxTextCustomization.Location = new System.Drawing.Point(6, 300);
             this.groupBoxTextCustomization.Name = "groupBoxTextCustomization";
             this.groupBoxTextCustomization.Size = new System.Drawing.Size(504, 129);
             this.groupBoxTextCustomization.TabIndex = 1;
@@ -672,20 +674,23 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.checkBoxAdvancedPing, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelAdvancedPing, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 4);
+            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 5);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 5);
             this.tableLayoutPanel2.Controls.Add(this.labelGameVersion, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.comboBoxGameVersion, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.labelParseMode, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.comboBoxParseMode, 1, 3);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowCount = 7;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(499, 265);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(499, 288);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // checkBoxAdvancedPing
@@ -717,7 +722,7 @@
             // 
             this.labelRefreshInterval.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelRefreshInterval.AutoSize = true;
-            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 219);
+            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 245);
             this.labelRefreshInterval.Name = "labelRefreshInterval";
             this.labelRefreshInterval.Size = new System.Drawing.Size(149, 12);
             this.labelRefreshInterval.TabIndex = 2;
@@ -727,7 +732,7 @@
             // 
             this.numericUpDownRefreshInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownRefreshInterval.DecimalPlaces = 1;
-            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 215);
+            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 241);
             this.numericUpDownRefreshInterval.Maximum = new decimal(new int[] {
             60,
             0,
@@ -770,6 +775,29 @@
             this.comboBoxGameVersion.Name = "comboBoxGameVersion";
             this.comboBoxGameVersion.Size = new System.Drawing.Size(338, 20);
             this.comboBoxGameVersion.TabIndex = 5;
+            // 
+            // labelParseMode
+            // 
+            this.labelParseMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelParseMode.AutoSize = true;
+            this.labelParseMode.Location = new System.Drawing.Point(3, 199);
+            this.labelParseMode.Name = "labelParseMode";
+            this.labelParseMode.Size = new System.Drawing.Size(149, 12);
+            this.labelParseMode.TabIndex = 6;
+            this.labelParseMode.Text = "Parse Mode:";
+            // 
+            // comboBoxParseMode
+            // 
+            this.comboBoxParseMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxParseMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxParseMode.FormattingEnabled = true;
+            this.comboBoxParseMode.Items.AddRange(new object[] {
+            "Normal",
+            "WinPCap"});
+            this.comboBoxParseMode.Location = new System.Drawing.Point(158, 195);
+            this.comboBoxParseMode.Name = "comboBoxParseMode";
+            this.comboBoxParseMode.Size = new System.Drawing.Size(338, 20);
+            this.comboBoxParseMode.TabIndex = 7;
             // 
             // tabPageLog
             // 
@@ -880,5 +908,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownRefreshInterval;
         private System.Windows.Forms.Label labelGameVersion;
         private System.Windows.Forms.ComboBox comboBoxGameVersion;
+        private System.Windows.Forms.Label labelParseMode;
+        private System.Windows.Forms.ComboBox comboBoxParseMode;
     }
 }

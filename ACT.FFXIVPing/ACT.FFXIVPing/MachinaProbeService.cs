@@ -14,6 +14,7 @@ namespace ACT.FFXIVPing
     {
         private FFXIVPingPlugin _plugin;
         private bool _isStarted = false;
+        private TCPNetworkMonitor.NetworkMonitorType _currentMonitorType = 0;
         private readonly ConcurrentDictionary<uint, ProcessContext> _processContexts = new ConcurrentDictionary<uint, ProcessContext>();
 
         public void AttachToAct(FFXIVPingPlugin plugin)
@@ -57,11 +58,25 @@ namespace ACT.FFXIVPing
 
                 UpdateGameClientVersion();
 
+                var targetMonitorType = DetermineMonitorType();
+                if (targetMonitorType != _currentMonitorType)
+                {
+                    _currentMonitorType = targetMonitorType;
+
+                    foreach (var context in _processContexts.Values)
+                    {
+                        context.Stop();
+                    }
+                    _processContexts.Clear();
+
+                    _plugin.Controller.NotifyLogMessageAppend(false, $"Parse mode = {targetMonitorType}.");
+                }
+
                 foreach (var pid in pids)
                 {
                     _processContexts.AddOrUpdate(pid, _pid =>
                     {
-                        var ctx = new ProcessContext(_pid);
+                        var ctx = new ProcessContext(_pid, _currentMonitorType);
                         ctx.Start();
                         return ctx;
                     }, (_, _ctx) => _ctx);
@@ -155,6 +170,18 @@ namespace ACT.FFXIVPing
             }
         }
 
+        private TCPNetworkMonitor.NetworkMonitorType DetermineMonitorType()
+        {
+            switch (_plugin.Settings.ParseMode)
+            {
+                case SettingsHolder.ParseModes.WinPCap:
+                    return TCPNetworkMonitor.NetworkMonitorType.WinPCap;
+                case SettingsHolder.ParseModes.Normal:
+                default:
+                    return TCPNetworkMonitor.NetworkMonitorType.RawSocket;
+            }
+        }
+
         private class ProcessContext
         {
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
@@ -164,10 +191,10 @@ namespace ACT.FFXIVPing
 
             public long LastEpoch { get; private set; } = 0;
 
-            public ProcessContext(uint pid)
+            public ProcessContext(uint pid, TCPNetworkMonitor.NetworkMonitorType monitorType)
             {
                 Monitor.ProcessID = pid;
-                Monitor.MonitorType = TCPNetworkMonitor.NetworkMonitorType.RawSocket;
+                Monitor.MonitorType = monitorType;
                 Monitor.MessageReceived = _packetMonitor.MessageReceived;
                 Monitor.MessageSent = _packetMonitor.MessageSent;
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;

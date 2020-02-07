@@ -268,6 +268,24 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
+        ///   查找类似 普通模式 的本地化字符串。
+        /// </summary>
+        internal static string comboBoxParseModeNormal {
+            get {
+                return ResourceManager.GetString("comboBoxParseModeNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 WinPCap (需安装驱动) 的本地化字符串。
+        /// </summary>
+        internal static string comboBoxParseModeWinPCap {
+            get {
+                return ResourceManager.GetString("comboBoxParseModeWinPCap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 没有数据... 的本地化字符串。
         /// </summary>
         internal static string defaultOverlayContentNoData {
@@ -423,6 +441,15 @@ namespace ACT.FFXIVPing.localization {
         internal static string labelOverlayContentNormal {
             get {
                 return ResourceManager.GetString("labelOverlayContentNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 解析模式: 的本地化字符串。
+        /// </summary>
+        internal static string labelParseMode {
+            get {
+                return ResourceManager.GetString("labelParseMode", resourceCulture);
             }
         }
         

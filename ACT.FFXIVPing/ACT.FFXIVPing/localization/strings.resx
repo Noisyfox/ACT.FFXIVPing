@@ -186,6 +186,12 @@
   <data name="comboBoxGameVersionGlobal" xml:space="preserve">
     <value>国际服</value>
   </data>
+  <data name="comboBoxParseModeNormal" xml:space="preserve">
+    <value>普通模式</value>
+  </data>
+  <data name="comboBoxParseModeWinPCap" xml:space="preserve">
+    <value>WinPCap (需安装驱动)</value>
+  </data>
   <data name="defaultOverlayContentNoData" xml:space="preserve">
     <value>没有数据...</value>
   </data>
@@ -242,6 +248,9 @@
   </data>
   <data name="labelOverlayContentNormal" xml:space="preserve">
     <value>正常状态下文字:</value>
+  </data>
+  <data name="labelParseMode" xml:space="preserve">
+    <value>解析模式:</value>
   </data>
   <data name="labelPosition" xml:space="preserve">
     <value>位置</value>

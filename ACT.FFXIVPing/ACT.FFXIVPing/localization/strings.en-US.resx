@@ -186,6 +186,12 @@
   <data name="comboBoxGameVersionGlobal" xml:space="preserve">
     <value>Global</value>
   </data>
+  <data name="comboBoxParseModeNormal" xml:space="preserve">
+    <value>Normal Network</value>
+  </data>
+  <data name="comboBoxParseModeWinPCap" xml:space="preserve">
+    <value>WinPCap Network</value>
+  </data>
   <data name="defaultOverlayContentNoData" xml:space="preserve">
     <value>No Ping Data...</value>
   </data>
@@ -242,6 +248,9 @@
   </data>
   <data name="labelOverlayContentNormal" xml:space="preserve">
     <value>Normal Text:</value>
+  </data>
+  <data name="labelParseMode" xml:space="preserve">
+    <value>Parse Mode:</value>
   </data>
   <data name="labelPosition" xml:space="preserve">
     <value>Position</value>
