@@ -1,5 +1,5 @@
 version: 1.4.0.{build}
-image: Visual Studio 2017
+image: Visual Studio 2019
 configuration:
 - Debug
 - Release
@@ -15,7 +15,7 @@ before_build:
     
     nuget restore ACT.FFXIVPing
 
-    cp MSBuild.ILMerge.Task.targets .\ACT.FFXIVPing\packages\MSBuild.ILMerge.Task.1.0.5\build\MSBuild.ILMerge.Task.targets
+    cp MSBuild.ILMerge.Task.targets .\ACT.FFXIVPing\packages\MSBuild.ILMerge.Task.1.1.1\build\MSBuild.ILMerge.Task.targets
 build:
   project: ACT.FFXIVPing/ACT.FFXIVPing.sln
   verbosity: minimal

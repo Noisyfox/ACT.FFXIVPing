@@ -41,7 +41,7 @@
     <ILMergeCopyAttributes></ILMergeCopyAttributes>
     
     <!-- Creates a .pdb file for the output assembly and merges into it any .pdb files found for input assemblies, default=true -->
-    <ILMergeDebugInfo></ILMergeDebugInfo>
+    <ILMergeDebugInfo>true</ILMergeDebugInfo>
 
     <!-- Target assembly will be delay signed -->
     <ILMergeDelaySign></ILMergeDelaySign>
@@ -62,6 +62,6 @@
     <ILMergeUnionMerge></ILMergeUnionMerge>
 
     <!-- The version of the target framework, default 40 (works for 45 too) -->
-    <ILTargetPlatform></ILTargetPlatform>
+    <ILTargetPlatform>45</ILTargetPlatform>
   </PropertyGroup>
 </Project>
