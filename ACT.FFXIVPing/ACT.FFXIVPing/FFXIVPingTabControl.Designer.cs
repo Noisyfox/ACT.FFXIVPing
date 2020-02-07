@@ -734,7 +734,7 @@
             0,
             0});
             this.numericUpDownRefreshInterval.Minimum = new decimal(new int[] {
-            3,
+            1,
             0,
             0,
             0});
