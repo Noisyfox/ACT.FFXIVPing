@@ -217,7 +217,7 @@
 * 如果你使用了任何类型的 VPN 软件那么通常你需要启用这个选项。</value>
   </data>
   <data name="labelAvailableVariables" xml:space="preserve">
-    <value>可用变量: {ping} {ping_ms_na} {lost}</value>
+    <value>可用变量: {ping} {ping_ms_na} {lost} {local_ip} {remote_ip}</value>
   </data>
   <data name="labelCurrentVersion" xml:space="preserve">
     <value>当前版本:</value>

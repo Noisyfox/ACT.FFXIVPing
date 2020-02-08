@@ -346,7 +346,7 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
-        ///   查找类似 可用变量: {ping} {ping_ms_na} {lost} 的本地化字符串。
+        ///   查找类似 可用变量: {ping} {ping_ms_na} {lost} {local_ip} {remote_ip} 的本地化字符串。
         /// </summary>
         internal static string labelAvailableVariables {
             get {
