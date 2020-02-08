@@ -111,42 +111,42 @@ namespace ACT.FFXIVPing
 
         private void DisplayRecord(ProcessContext ctx, uint pid)
         {
-            var ttlMachina = _machinaProbeService.FindTTL(pid);
+            var rttMachina = _machinaProbeService.FindRTT(pid);
 //            var epochMachina = _machinaProbeService.FindEpoch(pid);
             uint lost = 0;
-            int ttl;
+            int rtt;
 
-//            _controller.NotifyLogMessageAppend(false, $"ttlMachina={ttlMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
+//            _controller.NotifyLogMessageAppend(false, $"rttMachina={rttMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
 
             if (ctx == null)
             {
-                if (ttlMachina == -1)
+                if (rttMachina == -1)
                 {
                     _controller.NotifyOverlayContentChanged(false, _textTemplateNoData);
                     return;
                 }
-                ttl = ttlMachina;
+                rtt = rttMachina;
             }
             else
             {
                 lost = ctx.Lost;
-                ttl = Math.Max(ttlMachina, ctx.TTL);
+                rtt = Math.Max(rttMachina, ctx.RTT);
             }
             _lastPid = pid;
 
-            string ttlStr;
-            if (ttl == -1)
+            string rttStr;
+            if (rtt == -1)
             {
-                ttlStr = "N/A";
+                rttStr = "N/A";
             }
             else
             {
-                ttlStr = $"{ttl}ms";
+                rttStr = $"{rtt}ms";
             }
 
             var finalStr = _textTemplateNormal
-                .Replace("{ping}", $"{ttl}")
-                .Replace("{ping_ms_na}", ttlStr)
+                .Replace("{ping}", $"{rtt}")
+                .Replace("{ping_ms_na}", rttStr)
                 .Replace("{lost}", $"{lost}");
 
             _controller.NotifyOverlayContentChanged(false, finalStr);
@@ -160,7 +160,7 @@ namespace ACT.FFXIVPing
             private readonly LinkedList<ConnectionStasticRecord> _stasticRecords =
                 new LinkedList<ConnectionStasticRecord>();
 
-            public int TTL;
+            public int RTT;
             public uint Lost;
 
             public void Update(ConnectionStasticRecord record)
@@ -169,7 +169,7 @@ namespace ACT.FFXIVPing
                 var stData = record.StasticData;
                 var stPath = record.StasticPath;
 
-                TTL = (int)stPath.SampleRtt;
+                RTT = (int)stPath.SampleRtt;
 
                 // TODO: Calculate pkt lost
                 while ((_stasticRecords.Count > 0
@@ -203,7 +203,7 @@ namespace ACT.FFXIVPing
 
             public uint Pid;
 
-            public int TTL;
+            public int RTT;
             public uint Lost;
 
             public void Update(List<ConnectionStasticRecord> records)
@@ -223,7 +223,7 @@ namespace ACT.FFXIVPing
                 _allConnections.Values.Where(it => now.Subtract(it.LastActivate).TotalMinutes > 1)
                     .Select(it => it.Connection).ToList().ForEach(c => _allConnections.TryRemove(c, out var _));
 
-                TTL = _allConnections.Values.Select(it => it.TTL).Max();
+                RTT = _allConnections.Values.Select(it => it.RTT).Max();
                 Lost = _allConnections.Values.Select(it => it.Lost).Max();
             }
         }

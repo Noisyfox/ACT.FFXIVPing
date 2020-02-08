@@ -90,7 +90,7 @@ namespace ACT.FFXIVPing
         {
         }
 
-        public int FindTTL(uint pid)
+        public int FindRTT(uint pid)
         {
             if (!_isStarted)
             {
@@ -99,7 +99,7 @@ namespace ACT.FFXIVPing
 
             if (_processContexts.TryGetValue(pid, out var ctx))
             {
-                return ctx.CurrentTTL;
+                return ctx.CurrentRTT;
             }
             return -1;
         }
@@ -189,7 +189,7 @@ namespace ACT.FFXIVPing
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
             private readonly PacketMonitor _packetMonitor = new PacketMonitor();
 
-            public int CurrentTTL { get; private set; } = -1;
+            public int CurrentRTT { get; private set; } = -1;
 
             public long LastEpoch { get; private set; } = 0;
 
@@ -202,9 +202,9 @@ namespace ACT.FFXIVPing
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
             }
 
-            private void PacketMonitorOnOnPingSample(double ttl, DateTime sampleTime)
+            private void PacketMonitorOnOnPingSample(double rtt, DateTime sampleTime)
             {
-                CurrentTTL = (int) ttl;
+                CurrentRTT = (int) rtt;
                 LastEpoch = sampleTime.EpochMillis();
             }
 
