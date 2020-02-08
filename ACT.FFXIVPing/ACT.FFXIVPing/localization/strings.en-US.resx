@@ -217,7 +217,8 @@
 * This is particularly useful if you are using any sorts of VPN software.</value>
   </data>
   <data name="labelAvailableVariables" xml:space="preserve">
-    <value>Available Variables: {ping} {ping_ms_na} {lost} {local_ip} {remote_ip}</value>
+    <value>Available Variables: {ping} {ping_ms_na} {lost} {local_ip} {remote_ip}
+Sepcial Character: New line \n</value>
   </data>
   <data name="labelCurrentVersion" xml:space="preserve">
     <value>Current Version:</value>

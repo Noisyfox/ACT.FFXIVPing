@@ -46,9 +46,14 @@ namespace ACT.FFXIVPing
 
         private void ControllerOnOverlayTextTemplateChanged(bool fromView, string normal, string noData)
         {
-            _textTemplateNormal = normal;
-            _textTemplateNoData = noData;
+            _textTemplateNormal = PreprocessTemplate(normal);
+            _textTemplateNoData = PreprocessTemplate(noData);
             DisplayByPid(_currentPid);
+        }
+
+        private static string PreprocessTemplate(string input)
+        {
+            return input.Replace("\\n", "\n");
         }
 
         public void Stop()
