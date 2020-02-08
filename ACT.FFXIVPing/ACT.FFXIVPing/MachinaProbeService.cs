@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using ACT.FoxCommon;
-using FFXIVPingMachina.FFXIVNetwork;
 using FFXIVPingMachina.FFXIVNetwork.Packets;
 using FFXIVPingMachina.PingMonitor;
+using LibPingMachina.PingMonitor;
 using Machina;
 using Machina.FFXIV;
 
@@ -90,18 +89,18 @@ namespace ACT.FFXIVPing
         {
         }
 
-        public int FindRTT(uint pid)
+        public ConnectionPing FindPing(uint pid)
         {
             if (!_isStarted)
             {
-                return -1;
+                return null;
             }
 
             if (_processContexts.TryGetValue(pid, out var ctx))
             {
-                return ctx.CurrentRTT;
+                return ctx.CurrentPing;
             }
-            return -1;
+            return null;
         }
 
         private void Start()
@@ -189,7 +188,7 @@ namespace ACT.FFXIVPing
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
             private readonly PacketMonitor _packetMonitor = new PacketMonitor();
 
-            public int CurrentRTT { get; private set; } = -1;
+            public ConnectionPing CurrentPing { get; private set; } = null;
 
             public long LastEpoch { get; private set; } = 0;
 
@@ -207,10 +206,9 @@ namespace ACT.FFXIVPing
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
             }
 
-            private void PacketMonitorOnOnPingSample(double rtt, DateTime sampleTime)
+            private void PacketMonitorOnOnPingSample(ConnectionPing ping)
             {
-                CurrentRTT = (int) rtt;
-                LastEpoch = sampleTime.EpochMillis();
+                CurrentPing = ping;
             }
 
             public void Start()

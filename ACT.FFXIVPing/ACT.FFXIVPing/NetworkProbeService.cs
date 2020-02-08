@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ACT.FoxCommon;
 using ACT.FoxCommon.core;
+using LibPingMachina.PingMonitor;
 
 namespace ACT.FFXIVPing
 {
@@ -111,50 +112,61 @@ namespace ACT.FFXIVPing
 
         private void DisplayRecord(ProcessContext ctx, uint pid)
         {
-            var rttMachina = _machinaProbeService.FindRTT(pid);
+            if (ctx == null)
+            {
+                _controller.NotifyOverlayContentChanged(false, _textTemplateNoData);
+                return;
+            }
+
+            var rttMachina = _machinaProbeService.FindPing(pid);
 //            var epochMachina = _machinaProbeService.FindEpoch(pid);
             uint lost = 0;
-            int rtt;
+            ConnectionPing ping = null;
 
 //            _controller.NotifyLogMessageAppend(false, $"rttMachina={rttMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
 
-            if (ctx == null)
+            var rttNormal = ctx.RTT;
+            if (rttNormal == null)
             {
-                if (rttMachina == -1)
-                {
-                    _controller.NotifyOverlayContentChanged(false, _textTemplateNoData);
-                    return;
-                }
-                rtt = rttMachina;
+                ping = rttMachina;
             }
             else
             {
                 lost = ctx.Lost;
-                rtt = Math.Max(rttMachina, ctx.RTT);
+                if (rttMachina == null)
+                {
+                    ping = rttNormal;
+                }
+                else
+                {
+                    ping = rttMachina.Ping >= rttNormal.Ping ? rttMachina : rttNormal;
+                }
             }
+
             _lastPid = pid;
 
             string rttStr;
-            if (rtt == -1)
+            if (ping == null)
             {
                 rttStr = "N/A";
             }
             else
             {
-                rttStr = $"{rtt}ms";
+                rttStr = $"{(uint)ping.Ping}ms";
             }
 
             var finalStr = _textTemplateNormal
-                .Replace("{ping}", $"{rtt}")
+                .Replace("{ping}", $"{(ping == null ? "-1" : ((uint)ping.Ping).ToString())}")
                 .Replace("{ping_ms_na}", rttStr)
                 .Replace("{lost}", $"{lost}");
 
             _controller.NotifyOverlayContentChanged(false, finalStr);
         }
 
-        private class ConnectionContext
+        private class ConnectionContext: IComparable<ConnectionContext>
         {
-            public Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID Connection;
+            public Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID Connection { get; }
+            public ConnectionIdentifier ConnectionID { get; }
             public DateTime LastActivate = DateTime.Now;
 
             private readonly LinkedList<ConnectionStasticRecord> _stasticRecords =
@@ -162,6 +174,13 @@ namespace ACT.FFXIVPing
 
             public int RTT;
             public uint Lost;
+
+            public ConnectionContext(Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID connection)
+            {
+                Connection = connection;
+                ConnectionID = new ConnectionIdentifier(Connection.LocalAddress + ":" + Connection.LocalPort + "=>" +
+                                                        Connection.RemoteAddress + ":" + Connection.RemotePort);
+            }
 
             public void Update(ConnectionStasticRecord record)
             {
@@ -194,6 +213,11 @@ namespace ACT.FFXIVPing
 //                Controller.NotifyLogMessageAppend(false,
 //                    $"TotalPkt={stData.DataSegsOut},TotalBytes={stData.DataBytesOut},FastRetran={stPath.FastRetran},PktsRetrans={stPath.PktsRetrans},SndDupAckEpisodes={stPath.SndDupAckEpisodes},BytesRetrans={stPath.BytesRetrans}");
             }
+
+            public int CompareTo(ConnectionContext other)
+            {
+                return RTT.CompareTo(other.RTT);
+            }
         }
 
         private class ProcessContext
@@ -203,7 +227,7 @@ namespace ACT.FFXIVPing
 
             public uint Pid;
 
-            public int RTT;
+            public ConnectionPing RTT;
             public uint Lost;
 
             public void Update(List<ConnectionStasticRecord> records)
@@ -213,17 +237,19 @@ namespace ACT.FFXIVPing
 
                 foreach (var r in records)
                 {
-                    _allConnections.GetOrAdd(r.TcpRow, c => new ConnectionContext
-                    {
-                        Connection = c
-                    }).Update(r);
+                    _allConnections.GetOrAdd(r.TcpRow, c => new ConnectionContext(c)).Update(r);
                 }
 
                 // Remove inactivated connections
                 _allConnections.Values.Where(it => now.Subtract(it.LastActivate).TotalMinutes > 1)
                     .Select(it => it.Connection).ToList().ForEach(c => _allConnections.TryRemove(c, out var _));
 
-                RTT = _allConnections.Values.Select(it => it.RTT).Max();
+                var rttConn = _allConnections.Values.Max();
+                RTT = new ConnectionPing
+                {
+                    Connection = rttConn.ConnectionID,
+                    Ping = rttConn.RTT
+                };
                 Lost = _allConnections.Values.Select(it => it.Lost).Max();
             }
         }
