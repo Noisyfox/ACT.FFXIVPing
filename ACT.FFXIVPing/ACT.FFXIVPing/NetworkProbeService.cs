@@ -164,7 +164,7 @@ namespace ACT.FFXIVPing
                 .Replace("{ping}", $"{(ping == null ? "-1" : ((uint)ping.Ping).ToString())}")
                 .Replace("{ping_ms_na}", rttStr)
                 .Replace("{local_ip}", ping?.Connection?.LocalIP ?? "N/A")
-                .Replace("{remote_ip}", ping?.Connection?.RemoteIP ?? "N/A")
+                .Replace("{server_ip}", ping?.Connection?.RemoteIP ?? "N/A")
                 .Replace("{lost}", $"{lost}");
 
             _controller.NotifyOverlayContentChanged(false, finalStr);
