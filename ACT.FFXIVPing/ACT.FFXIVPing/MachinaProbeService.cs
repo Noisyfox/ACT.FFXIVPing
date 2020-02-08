@@ -197,6 +197,11 @@ namespace ACT.FFXIVPing
             {
                 Monitor.ProcessID = pid;
                 Monitor.MonitorType = monitorType;
+
+                // Packet sent by game client won't be captured if filter is enabled for RawSocket mode,
+                // so enable the filter only on WinPCap mode.
+                Monitor.UseSocketFilter = monitorType == TCPNetworkMonitor.NetworkMonitorType.WinPCap;
+
                 Monitor.MessageReceived = _packetMonitor.MessageReceived;
                 Monitor.MessageSent = _packetMonitor.MessageSent;
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
