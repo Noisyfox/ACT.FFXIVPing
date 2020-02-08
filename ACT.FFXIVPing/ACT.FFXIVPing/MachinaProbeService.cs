@@ -58,11 +58,13 @@ namespace ACT.FFXIVPing
 
                 UpdateGameClientVersion();
 
+                // Check network parse mode
                 var targetMonitorType = DetermineMonitorType();
                 if (targetMonitorType != _currentMonitorType)
                 {
                     _currentMonitorType = targetMonitorType;
 
+                    // Stop all existing monitors since the parse mode has changed
                     foreach (var context in _processContexts.Values)
                     {
                         context.Stop();
