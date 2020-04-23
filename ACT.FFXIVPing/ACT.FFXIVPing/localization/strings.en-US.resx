@@ -177,15 +177,6 @@
   <data name="checkBoxShowOverlay" xml:space="preserve">
     <value>Show Overlay</value>
   </data>
-  <data name="comboBoxGameVersionAutoDetect" xml:space="preserve">
-    <value>Auto Detection (require FFVIX ACT Plugin enabled)</value>
-  </data>
-  <data name="comboBoxGameVersionChina" xml:space="preserve">
-    <value>Chinese</value>
-  </data>
-  <data name="comboBoxGameVersionGlobal" xml:space="preserve">
-    <value>Global</value>
-  </data>
   <data name="comboBoxParseModeNormal" xml:space="preserve">
     <value>Normal Network</value>
   </data>
@@ -222,9 +213,6 @@ Sepcial Character: New line \n</value>
   </data>
   <data name="labelCurrentVersion" xml:space="preserve">
     <value>Current Version:</value>
-  </data>
-  <data name="labelGameVersion" xml:space="preserve">
-    <value>Game Client Version:</value>
   </data>
   <data name="labelHeight" xml:space="preserve">
     <value>Height:</value>

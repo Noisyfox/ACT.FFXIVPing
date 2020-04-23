@@ -241,33 +241,6 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
-        ///   查找类似 自动检测 (需要启用 FFXIV解析插件) 的本地化字符串。
-        /// </summary>
-        internal static string comboBoxGameVersionAutoDetect {
-            get {
-                return ResourceManager.GetString("comboBoxGameVersionAutoDetect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 中国服 的本地化字符串。
-        /// </summary>
-        internal static string comboBoxGameVersionChina {
-            get {
-                return ResourceManager.GetString("comboBoxGameVersionChina", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 国际服 的本地化字符串。
-        /// </summary>
-        internal static string comboBoxGameVersionGlobal {
-            get {
-                return ResourceManager.GetString("comboBoxGameVersionGlobal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 普通模式 的本地化字符串。
         /// </summary>
         internal static string comboBoxParseModeNormal {
@@ -361,15 +334,6 @@ namespace ACT.FFXIVPing.localization {
         internal static string labelCurrentVersion {
             get {
                 return ResourceManager.GetString("labelCurrentVersion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 游戏客户端版本: 的本地化字符串。
-        /// </summary>
-        internal static string labelGameVersion {
-            get {
-                return ResourceManager.GetString("labelGameVersion", resourceCulture);
             }
         }
         

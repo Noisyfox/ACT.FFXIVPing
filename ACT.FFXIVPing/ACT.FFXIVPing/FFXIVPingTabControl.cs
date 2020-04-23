@@ -170,8 +170,6 @@ namespace ACT.FFXIVPing
             _controller.NotifyAdvancedPingEnabled(true, checkBoxAdvancedPing.Checked);
 
             var enabled = checkBoxAdvancedPing.Checked;
-            comboBoxGameVersion.Enabled = enabled;
-            labelGameVersion.Enabled = enabled;
             comboBoxParseMode.Enabled = enabled;
             labelParseMode.Enabled = enabled;
         }
@@ -184,11 +182,6 @@ namespace ACT.FFXIVPing
         private void TextBoxOverlayContentOnTextChanged(object sender, EventArgs eventArgs)
         {
             _controller.NotifyOverlayTextTemplateChanged(true, textBoxOverlayContentNormal.Text, textBoxOverlayContentNoData.Text);
-        }
-
-        private void ComboBoxGameVersion_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _plugin.Settings.GameClientVersion = (SettingsHolder.GameClientVersions) comboBoxGameVersion.SelectedIndex;
         }
 
         private void ComboBoxParseMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -215,12 +208,10 @@ namespace ACT.FFXIVPing
             var settings = _plugin.Settings;
             textBoxOverlayContentNormal.Text = settings.OverlayContentNormal ?? strings.defaultOverlayContentNormal;
             textBoxOverlayContentNoData.Text = settings.OverlayContentNoData ?? strings.defaultOverlayContentNoData;
-            comboBoxGameVersion.SelectedIndex = (int)settings.GameClientVersion;
             comboBoxParseMode.SelectedIndex = (int)settings.ParseMode;
 
             textBoxOverlayContentNormal.TextChanged += TextBoxOverlayContentOnTextChanged;
             textBoxOverlayContentNoData.TextChanged += TextBoxOverlayContentOnTextChanged;
-            comboBoxGameVersion.SelectedIndexChanged += ComboBoxGameVersion_SelectedIndexChanged;
             comboBoxParseMode.SelectedIndexChanged += ComboBoxParseMode_SelectedIndexChanged;
 
             CheckBoxAdvancedPingOnCheckedChanged(this, EventArgs.Empty);

@@ -177,15 +177,6 @@
   <data name="checkBoxShowOverlay" xml:space="preserve">
     <value>显示悬浮窗</value>
   </data>
-  <data name="comboBoxGameVersionAutoDetect" xml:space="preserve">
-    <value>自动检测 (需要启用 FFXIV解析插件)</value>
-  </data>
-  <data name="comboBoxGameVersionChina" xml:space="preserve">
-    <value>中国服</value>
-  </data>
-  <data name="comboBoxGameVersionGlobal" xml:space="preserve">
-    <value>国际服</value>
-  </data>
   <data name="comboBoxParseModeNormal" xml:space="preserve">
     <value>普通模式</value>
   </data>
@@ -222,9 +213,6 @@
   </data>
   <data name="labelCurrentVersion" xml:space="preserve">
     <value>当前版本:</value>
-  </data>
-  <data name="labelGameVersion" xml:space="preserve">
-    <value>游戏客户端版本:</value>
   </data>
   <data name="labelHeight" xml:space="preserve">
     <value>高:</value>

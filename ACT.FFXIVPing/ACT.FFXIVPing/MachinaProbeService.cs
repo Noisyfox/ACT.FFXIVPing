@@ -1,9 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using ACT.FoxCommon;
-using FFXIVPingMachina.FFXIVNetwork.Packets;
 using FFXIVPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor;
+using LibPingMachina.PingMonitor.handler;
 using Machina;
 using Machina.FFXIV;
 
@@ -55,8 +54,6 @@ namespace ACT.FFXIVPing
                     }
                 }
 
-                UpdateGameClientVersion();
-
                 // Check network parse mode
                 var targetMonitorType = DetermineMonitorType();
                 if (targetMonitorType != _currentMonitorType)
@@ -78,6 +75,10 @@ namespace ACT.FFXIVPing
                     _processContexts.AddOrUpdate(pid, _pid =>
                     {
                         var ctx = new ProcessContext(_pid, _currentMonitorType);
+                        ctx.OnPingOpCodeDetected += code =>
+                        {
+                            _plugin.Controller.NotifyLogMessageAppend(false, $"IPC Ping OpCode detected for pid={_pid}: 0x{code:x4}");
+                        };
                         ctx.Start();
                         return ctx;
                     }, (_, _ctx) => _ctx);
@@ -132,45 +133,6 @@ namespace ACT.FFXIVPing
             }
         }
 
-        private void UpdateGameClientVersionTo(FFXIVClientVersion clientVersion)
-        {
-            if (clientVersion != PacketMonitor.ClientVersion)
-            {
-                PacketMonitor.ClientVersion = clientVersion;
-                _plugin.Controller.NotifyLogMessageAppend(false, $"Game client version = {clientVersion}.");
-            }
-        }
-
-        private void UpdateGameClientVersion()
-        {
-            switch (_plugin.Settings.GameClientVersion)
-            {
-                case SettingsHolder.GameClientVersions.AutoDetection:
-                    // Detect game version
-                    var version = GameClientInfo.GetLanguage();
-                    if (version.IsGlobalGame())
-                    {
-                        UpdateGameClientVersionTo(FFXIVClientVersion.Global);
-                    }
-                    else if (version == GameClientInfo.GameLanguage.Cn)
-                    {
-                        UpdateGameClientVersionTo(FFXIVClientVersion.CN);
-                    }
-                    else
-                    {
-                        UpdateGameClientVersionTo(FFXIVClientVersion.Unknown);
-                    }
-
-                    break;
-                case SettingsHolder.GameClientVersions.Global:
-                    UpdateGameClientVersionTo(FFXIVClientVersion.Global);
-                    break;
-                case SettingsHolder.GameClientVersions.China:
-                    UpdateGameClientVersionTo(FFXIVClientVersion.CN);
-                    break;
-            }
-        }
-
         private TCPNetworkMonitor.NetworkMonitorType DetermineMonitorType()
         {
             switch (_plugin.Settings.ParseMode)
@@ -185,9 +147,9 @@ namespace ACT.FFXIVPing
 
         private class ProcessContext
         {
+            public event IPCPingOpCodeDetector.PingOpCodeDetectDelegate OnPingOpCodeDetected;
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
             private readonly PacketMonitor _packetMonitor = new PacketMonitor();
-
             public ConnectionPing CurrentPing { get; private set; } = null;
 
             public long LastEpoch { get; private set; } = 0;
@@ -204,6 +166,7 @@ namespace ACT.FFXIVPing
                 Monitor.MessageReceived = _packetMonitor.MessageReceived;
                 Monitor.MessageSent = _packetMonitor.MessageSent;
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
+                _packetMonitor.OnPingOpCodeDetected += code => OnPingOpCodeDetected?.Invoke(code);
             }
 
             private void PacketMonitorOnOnPingSample(ConnectionPing ping)
