@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using ACT.FFXIVPing.localization;
 using ACT.FoxCommon;
+using ACT.FoxCommon.dpi;
 using ACT.FoxCommon.localization;
 using ACT.FoxCommon.shortcut;
 using ACT.FoxCommon.update;
@@ -26,6 +27,8 @@ namespace ACT.FFXIVPing
             comboBoxLanguage.DataSource = Localization.SupportedLanguages;
 
             labelCurrentVersionValue.Text = Assembly.GetCallingAssembly().GetName().Version.ToString();
+
+            this.AdjustForDpiScaling();
         }
 
         public void AttachToAct(FFXIVPingPlugin plugin)
