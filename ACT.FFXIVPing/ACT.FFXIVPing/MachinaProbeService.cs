@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using FFXIVPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor.handler;
@@ -90,8 +91,9 @@ namespace ACT.FFXIVPing
         {
         }
 
-        public ConnectionPing FindPing(uint pid)
+        public ConnectionPing FindPing(uint pid, out bool processFound)
         {
+            processFound = false;
             if (!_isStarted)
             {
                 return null;
@@ -99,9 +101,24 @@ namespace ACT.FFXIVPing
 
             if (_processContexts.TryGetValue(pid, out var ctx))
             {
+                processFound = true;
                 return ctx.CurrentPing;
             }
             return null;
+        }
+
+        public KeyValuePair<uint, ConnectionPing>? FirstPing()
+        {
+            var firstCtx = _processContexts.Values.FirstOrDefault();
+
+            if (firstCtx == null)
+            {
+                return null;
+            }
+            else
+            {
+                return new KeyValuePair<uint, ConnectionPing>(firstCtx.Monitor.ProcessID, firstCtx.CurrentPing);
+            }
         }
 
         private void Start()

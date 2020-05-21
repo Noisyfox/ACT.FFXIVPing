@@ -68,27 +68,90 @@ namespace ACT.FFXIVPing
             DisplayByPid(pid);
         }
 
-        private void DisplayByPid(uint pid)
+        private void DisplayByPid(uint pid, bool tryLast = true)
         {
-            if (_contexts.TryGetValue(pid, out var conrtext))
+            // Merge process data from different services
+            var machinaPing = _machinaProbeService.FindPing(pid, out var machinaProcessFound);
+            var iphlpapiProcessFound = _contexts.TryGetValue(pid, out var iphlpapiContext);
+
+            var processFound = machinaProcessFound || iphlpapiProcessFound;
+            if (!processFound)
             {
-                DisplayRecord(conrtext, pid);
+                if (tryLast)
+                {
+                    DisplayByPid(_lastPid, false); 
+                    return;
+                }
+
+                var firstMachinaContext = _machinaProbeService.FirstPing();
+                var firstIphlpapiContext = _contexts.Values.FirstOrDefault();
+
+                if (firstMachinaContext.HasValue)
+                {
+                    pid = firstMachinaContext.Value.Key;
+                    machinaPing = firstMachinaContext.Value.Value;
+                    processFound = true;
+
+                    if (firstIphlpapiContext != null && firstIphlpapiContext.Pid == pid)
+                    {
+                        iphlpapiContext = firstIphlpapiContext;
+                    }
+                }
+                else if(firstIphlpapiContext != null)
+                {
+                    pid = firstIphlpapiContext.Pid;
+                    iphlpapiContext = firstIphlpapiContext;
+                    processFound = true;
+                }
             }
-            else if (_contexts.TryGetValue(_lastPid, out conrtext))
+
+            if (!processFound)
             {
-                DisplayRecord(conrtext, _lastPid);
+                _controller.NotifyOverlayContentChanged(false, _textTemplateNoData);
             }
             else
             {
-                var first = _contexts.Values.FirstOrDefault();
-                if (first != null)
+                uint lost = 0;
+                ConnectionPing ping;
+
+                var iphlpapiRtt = iphlpapiContext?.RTT;
+                if (iphlpapiRtt == null)
                 {
-                    DisplayRecord(first, first.Pid);
+                    ping = machinaPing;
                 }
                 else
                 {
-                    DisplayRecord(null, pid);
+                    lost = iphlpapiContext.Lost;
+                    if (machinaPing == null)
+                    {
+                        ping = iphlpapiRtt;
+                    }
+                    else
+                    {
+                        ping = machinaPing.Ping >= iphlpapiRtt.Ping ? machinaPing : iphlpapiRtt;
+                    }
                 }
+
+                _lastPid = pid;
+
+                string rttStr;
+                if (ping == null)
+                {
+                    rttStr = "N/A";
+                }
+                else
+                {
+                    rttStr = $"{(uint)ping.Ping}ms";
+                }
+
+                var finalStr = _textTemplateNormal
+                    .Replace("{ping}", $"{(ping == null ? "-1" : ((uint)ping.Ping).ToString())}")
+                    .Replace("{ping_ms_na}", rttStr)
+                    .Replace("{local_ip}", ping?.Connection?.LocalIP ?? "N/A")
+                    .Replace("{server_ip}", ping?.Connection?.RemoteIP ?? "N/A")
+                    .Replace("{lost}", $"{lost}");
+
+                _controller.NotifyOverlayContentChanged(false, finalStr);
             }
         }
 
@@ -113,61 +176,6 @@ namespace ACT.FFXIVPing
 
             // Pick one record and display
             DisplayByPid(_currentPid);
-        }
-
-        private void DisplayRecord(ProcessContext ctx, uint pid)
-        {
-            if (ctx == null)
-            {
-                _controller.NotifyOverlayContentChanged(false, _textTemplateNoData);
-                return;
-            }
-
-            var rttMachina = _machinaProbeService.FindPing(pid);
-//            var epochMachina = _machinaProbeService.FindEpoch(pid);
-            uint lost = 0;
-            ConnectionPing ping = null;
-
-//            _controller.NotifyLogMessageAppend(false, $"rttMachina={rttMachina}, epoch={Utility.EpochToDateTime(epochMachina).ToLocalTime()}\n");
-
-            var rttNormal = ctx.RTT;
-            if (rttNormal == null)
-            {
-                ping = rttMachina;
-            }
-            else
-            {
-                lost = ctx.Lost;
-                if (rttMachina == null)
-                {
-                    ping = rttNormal;
-                }
-                else
-                {
-                    ping = rttMachina.Ping >= rttNormal.Ping ? rttMachina : rttNormal;
-                }
-            }
-
-            _lastPid = pid;
-
-            string rttStr;
-            if (ping == null)
-            {
-                rttStr = "N/A";
-            }
-            else
-            {
-                rttStr = $"{(uint)ping.Ping}ms";
-            }
-
-            var finalStr = _textTemplateNormal
-                .Replace("{ping}", $"{(ping == null ? "-1" : ((uint)ping.Ping).ToString())}")
-                .Replace("{ping_ms_na}", rttStr)
-                .Replace("{local_ip}", ping?.Connection?.LocalIP ?? "N/A")
-                .Replace("{server_ip}", ping?.Connection?.RemoteIP ?? "N/A")
-                .Replace("{lost}", $"{lost}");
-
-            _controller.NotifyOverlayContentChanged(false, finalStr);
         }
 
         private class ConnectionContext: IComparable<ConnectionContext>
