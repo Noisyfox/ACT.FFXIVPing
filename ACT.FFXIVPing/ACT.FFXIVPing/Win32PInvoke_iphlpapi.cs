@@ -146,6 +146,11 @@ namespace ACT.FFXIVPing
             {
                 return !left.Equals(right);
             }
+
+            public override string ToString()
+            {
+                return $"TCPRow(pid={ProcessId}, local={LocalAddress}:{LocalPort}, remote={RemoteAddress}:{RemotePort})";
+            }
         }
 
         [StructLayout(LayoutKind.Sequential)]

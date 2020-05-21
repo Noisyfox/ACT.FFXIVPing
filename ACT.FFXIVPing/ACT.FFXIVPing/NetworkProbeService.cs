@@ -295,6 +295,11 @@ namespace ACT.FFXIVPing
 
                 return (retransDelta * 100.0 / sendDelta).Clamp(0, 100);
             }
+
+            public override string ToString()
+            {
+                return $"ConnectionStasticRecord(Timestamp={Timestamp}, TcpRow={TcpRow})";
+            }
         }
 
         private class ProbeThread : BaseThreading<ProbeContext>
