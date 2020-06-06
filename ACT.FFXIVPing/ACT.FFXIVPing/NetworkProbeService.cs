@@ -333,6 +333,7 @@ namespace ACT.FFXIVPing
                         if (connections != null)
                         {
                             var gameConnections = connections
+                                .Where(it => !it.RemoteAddress.IsLoopback())
                                 .Where(it => currentPid.Contains(it.ProcessId))
                                 .GroupBy(it => it.ProcessId).ToDictionary(g => g.Key, g => g.ToList());
 
