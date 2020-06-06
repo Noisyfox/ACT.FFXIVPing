@@ -155,7 +155,7 @@ namespace ACT.FFXIVPing
             }
         }
 
-        private void SubmitRecords(List<ConnectionStasticRecord> records)
+        private void SubmitRecords(List<ConnectionStasticRecord> records, HashSet<uint> gamePids)
         {
             if (records != null && records.Count > 0)
             {
@@ -169,10 +169,18 @@ namespace ACT.FFXIVPing
                 }
             }
 
+            // Remove processes that are no longer presented
+            var oldCtx = new HashSet<uint>(_contexts.Keys);
+            oldCtx.ExceptWith(gamePids);
+            foreach (var pid in oldCtx)
+            {
+                _contexts.TryRemove(pid, out _);
+            }
+
             // Remove inactivated records
             var now = DateTime.Now;
             _contexts.Values.Where(it => now.Subtract(it.LastActivate).TotalMinutes > 1)
-                .Select(it => it.Pid).ToList().ForEach(p=>_contexts.TryRemove(p, out var _));
+                .Select(it => it.Pid).ToList().ForEach(p=>_contexts.TryRemove(p, out _));
 
             // Pick one record and display
             DisplayByPid(_currentPid);
@@ -365,16 +373,16 @@ namespace ACT.FFXIVPing
                                         }
                                     }
                                 }
-                                service.SubmitRecords(records);
+                                service.SubmitRecords(records, currentPid);
                             }
                             else
                             {
-                                service.SubmitRecords(null);
+                                service.SubmitRecords(null, currentPid);
                             }
                         }
                         else
                         {
-                            service.SubmitRecords(null);
+                            service.SubmitRecords(null, currentPid);
                         }
                     }
                     catch (Exception ex)
