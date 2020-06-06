@@ -195,7 +195,7 @@ namespace ACT.FFXIVPing
             private readonly LinkedList<ConnectionStasticRecord> _stasticRecords =
                 new LinkedList<ConnectionStasticRecord>();
 
-            public int RTT;
+            public long RTT;
             public uint Lost;
 
             public ConnectionContext(Win32PInvoke_iphlpapi.MIB_TCPROW_OWNER_PID connection)
@@ -211,7 +211,7 @@ namespace ACT.FFXIVPing
                 var stData = record.StasticData;
                 var stPath = record.StasticPath;
 
-                RTT = (int)stPath.SampleRtt;
+                RTT = (long) stPath.SampleRtt;
 
                 // TODO: Calculate pkt lost
                 while ((_stasticRecords.Count > 0
@@ -235,6 +235,11 @@ namespace ACT.FFXIVPing
 //                }
 //                Controller.NotifyLogMessageAppend(false,
 //                    $"TotalPkt={stData.DataSegsOut},TotalBytes={stData.DataBytesOut},FastRetran={stPath.FastRetran},PktsRetrans={stPath.PktsRetrans},SndDupAckEpisodes={stPath.SndDupAckEpisodes},BytesRetrans={stPath.BytesRetrans}");
+            }
+
+            public bool IsValidRTT()
+            {
+                return RTT < uint.MaxValue && RTT >= uint.MinValue;
             }
 
             public int CompareTo(ConnectionContext other)
@@ -267,13 +272,21 @@ namespace ACT.FFXIVPing
                 _allConnections.Values.Where(it => now.Subtract(it.LastActivate).TotalMinutes > 1)
                     .Select(it => it.Connection).ToList().ForEach(c => _allConnections.TryRemove(c, out var _));
 
-                var rttConn = _allConnections.Values.Max();
-                RTT = new ConnectionPing
+                var validConnections = _allConnections.Values.Where(it => it.IsValidRTT()).ToList();
+                if (validConnections.Count == 0)
                 {
-                    Connection = rttConn.ConnectionID,
-                    Ping = rttConn.RTT
-                };
-                Lost = _allConnections.Values.Select(it => it.Lost).Max();
+                    RTT = null;
+                }
+                else
+                {
+                    var rttConn = validConnections.Max();
+                    RTT = new ConnectionPing
+                    {
+                        Connection = rttConn.ConnectionID,
+                        Ping = rttConn.RTT
+                    };
+                    Lost = validConnections.Select(it => it.Lost).Max();
+                }
             }
         }
 
