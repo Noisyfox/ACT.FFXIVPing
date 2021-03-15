@@ -34,19 +34,7 @@ namespace ACT.FFXIVPing
             {
                 while (!WorkingThreadStopping)
                 {
-                    var ps = Utils.GetGameProcesses().Select(it =>
-                    {
-                        try
-                        {
-                            return it.Id;
-                        }
-                        catch (Exception)
-                        {
-                        }
-                        return -1;
-                    }).Where(it => it > 0).Select(it => (uint) it);
-
-                    context.NotifyGameProcessUpdated(false, new HashSet<uint>(ps));
+                    context.NotifyGameProcessUpdated(false, new HashSet<uint>(Utils.GetGamePids()));
 
                     SafeSleep(2000);
                 }
