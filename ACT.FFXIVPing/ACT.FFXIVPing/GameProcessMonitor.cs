@@ -34,14 +34,11 @@ namespace ACT.FFXIVPing
             {
                 while (!WorkingThreadStopping)
                 {
-                    var ps = Process.GetProcesses().Select(it =>
+                    var ps = Utils.GetGameProcesses().Select(it =>
                     {
                         try
                         {
-                            if (Utils.IsGameExeProcess(it))
-                            {
-                                return it.Id;
-                            }
+                            return it.Id;
                         }
                         catch (Exception)
                         {
