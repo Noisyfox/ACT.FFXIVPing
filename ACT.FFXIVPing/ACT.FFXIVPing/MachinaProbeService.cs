@@ -7,6 +7,7 @@ using LibPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor.handler;
 using Machina;
 using Machina.FFXIV;
+using Machina.Infrastructure;
 
 namespace ACT.FFXIVPing
 {
@@ -14,7 +15,7 @@ namespace ACT.FFXIVPing
     {
         private FFXIVPingPlugin _plugin;
         private bool _isStarted = false;
-        private TCPNetworkMonitor.NetworkMonitorType _currentMonitorType = 0;
+        private NetworkMonitorType _currentMonitorType = 0;
         private readonly ConcurrentDictionary<uint, ProcessContext> _processContexts = new ConcurrentDictionary<uint, ProcessContext>();
 
         public void AttachToAct(FFXIVPingPlugin plugin)
@@ -151,15 +152,15 @@ namespace ACT.FFXIVPing
             }
         }
 
-        private TCPNetworkMonitor.NetworkMonitorType DetermineMonitorType()
+        private NetworkMonitorType DetermineMonitorType()
         {
             switch (_plugin.Settings.ParseMode)
             {
                 case SettingsHolder.ParseModes.WinPCap:
-                    return TCPNetworkMonitor.NetworkMonitorType.WinPCap;
+                    return NetworkMonitorType.WinPCap;
                 case SettingsHolder.ParseModes.Normal:
                 default:
-                    return TCPNetworkMonitor.NetworkMonitorType.RawSocket;
+                    return NetworkMonitorType.RawSocket;
             }
         }
 
@@ -172,17 +173,17 @@ namespace ACT.FFXIVPing
 
             public long LastEpoch { get; private set; } = 0;
 
-            public ProcessContext(uint pid, TCPNetworkMonitor.NetworkMonitorType monitorType)
+            public ProcessContext(uint pid, NetworkMonitorType monitorType)
             {
                 Monitor.ProcessID = pid;
                 Monitor.MonitorType = monitorType;
 
                 // Packet sent by game client won't be captured if filter is enabled for RawSocket mode,
                 // so enable the filter only on WinPCap mode.
-                Monitor.UseSocketFilter = monitorType == TCPNetworkMonitor.NetworkMonitorType.WinPCap;
+                Monitor.UseRemoteIpFilter = monitorType == NetworkMonitorType.WinPCap;
 
-                Monitor.MessageReceived = _packetMonitor.MessageReceived;
-                Monitor.MessageSent = _packetMonitor.MessageSent;
+                Monitor.MessageReceivedEventHandler = _packetMonitor.MessageReceived;
+                Monitor.MessageSentEventHandler = _packetMonitor.MessageSent;
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
                 _packetMonitor.OnPingOpCodeDetected += code => OnPingOpCodeDetected?.Invoke(code);
             }
