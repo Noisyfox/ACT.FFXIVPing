@@ -171,6 +171,9 @@
   <data name="checkBoxClickthrough" xml:space="preserve">
     <value>Clickthrough</value>
   </data>
+  <data name="checkBoxDebugLogging" xml:space="preserve">
+    <value>Show Debug Logging</value>
+  </data>
   <data name="checkBoxNotifyStableOnly" xml:space="preserve">
     <value>Check for Stable Version Only</value>
   </data>

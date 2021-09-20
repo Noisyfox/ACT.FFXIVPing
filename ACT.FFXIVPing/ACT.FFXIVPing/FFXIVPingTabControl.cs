@@ -7,6 +7,7 @@ using ACT.FFXIVPing.localization;
 using ACT.FoxCommon;
 using ACT.FoxCommon.dpi;
 using ACT.FoxCommon.localization;
+using ACT.FoxCommon.logging;
 using ACT.FoxCommon.shortcut;
 using ACT.FoxCommon.update;
 
@@ -52,6 +53,7 @@ namespace ACT.FFXIVPing
             settings.AddControlSetting(checkBoxNotifyStableOnly);
             settings.AddControlSetting(checkBoxAdvancedPing);
             settings.AddControlSetting(numericUpDownRefreshInterval);
+            settings.AddControlSetting(checkBoxDebugLogging);
 
             _controller = plugin.Controller;
 
@@ -198,8 +200,14 @@ namespace ACT.FFXIVPing
             textBoxOverlayContentNoData.Text = strings.defaultOverlayContentNoData;
         }
 
+        private void checkBoxDebugLogging_CheckedChanged(object sender, EventArgs e)
+        {
+            Logger.IsDebugLevelEnabled = checkBoxDebugLogging.Checked;
+        }
+
         private void ControllerOnSettingsLoaded()
         {
+            Logger.IsDebugLevelEnabled = checkBoxDebugLogging.Checked;
             if (checkBoxCheckUpdate.Checked)
             {
                 _plugin.UpdateChecker.CheckUpdate(false);

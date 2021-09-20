@@ -47,8 +47,8 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
-        ///   重写当前线程的 CurrentUICulture 属性
-        ///   重写当前线程的 CurrentUICulture 属性。
+        ///   重写当前线程的 CurrentUICulture 属性，对
+        ///   使用此强类型资源类的所有资源查找执行重写。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static global::System.Globalization.CultureInfo Culture {
@@ -219,6 +219,15 @@ namespace ACT.FFXIVPing.localization {
         internal static string checkBoxClickthrough {
             get {
                 return ResourceManager.GetString("checkBoxClickthrough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 显示调试日志 的本地化字符串。
+        /// </summary>
+        internal static string checkBoxDebugLogging {
+            get {
+                return ResourceManager.GetString("checkBoxDebugLogging", resourceCulture);
             }
         }
         

@@ -171,6 +171,9 @@
   <data name="checkBoxClickthrough" xml:space="preserve">
     <value>鼠标穿透</value>
   </data>
+  <data name="checkBoxDebugLogging" xml:space="preserve">
+    <value>显示调试日志</value>
+  </data>
   <data name="checkBoxNotifyStableOnly" xml:space="preserve">
     <value>只提示稳定版更新</value>
   </data>

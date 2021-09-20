@@ -4,6 +4,7 @@ using System.Windows.Forms.Integration;
 using ACT.FFXIVPing.localization;
 using ACT.FoxCommon;
 using ACT.FoxCommon.core;
+using ACT.FoxCommon.logging;
 
 namespace ACT.FFXIVPing
 {
@@ -26,7 +27,10 @@ namespace ACT.FFXIVPing
         private bool _isGameActivated = false;
 
         public override void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
-        {
+        {   
+            // Display log
+            Logger.OnLogging = s => Controller.NotifyLogMessageAppend(false, s);
+
             _settingsLoaded = false;
             ParentTabPage = pluginScreenSpace;
             StatusLabel = pluginStatusText;
@@ -125,6 +129,7 @@ namespace ACT.FFXIVPing
                 Settings?.Save();
             }
 
+            Logger.OnLogging = null;
             StatusLabel.Text = "Exited. Bye~";
         }
 

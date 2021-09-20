@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ACT.FoxCommon;
 using ACT.FoxCommon.core;
+using ACT.FoxCommon.logging;
 using LibPingMachina.PingMonitor;
 
 namespace ACT.FFXIVPing
@@ -400,7 +401,7 @@ namespace ACT.FFXIVPing
                     }
                     catch (Exception ex)
                     {
-                        service._controller?.NotifyLogMessageAppend(false, ex + "\n");
+                        Logger.Error("Failed to read TCP_ESTATS", ex);
                     }
                     SafeSleep(delay);
                 }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using ACT.FoxCommon;
 using ACT.FoxCommon.core;
+using ACT.FoxCommon.logging;
 
 namespace ACT.FFXIVPing
 {
@@ -34,7 +35,9 @@ namespace ACT.FFXIVPing
             {
                 while (!WorkingThreadStopping)
                 {
-                    context.NotifyGameProcessUpdated(false, new HashSet<uint>(Utils.GetGamePids()));
+                    var pids = new HashSet<uint>(Utils.GetGamePids());
+                    Logger.Debug($"Game pids: [{string.Join(",", pids)}]");
+                    context.NotifyGameProcessUpdated(false, pids);
 
                     SafeSleep(2000);
                 }
