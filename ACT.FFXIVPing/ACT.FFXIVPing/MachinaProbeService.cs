@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using ACT.FoxCommon.logging;
 using FFXIVPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor.handler;
@@ -78,7 +79,7 @@ namespace ACT.FFXIVPing
                         var ctx = new ProcessContext(_pid, _currentMonitorType);
                         ctx.OnPingOpCodeDetected += code =>
                         {
-                            _plugin.Controller.NotifyLogMessageAppend(false, $"IPC Ping OpCode detected for pid={_pid}: 0x{code:x4}");
+                            Logger.Info($"IPC Ping OpCode detected for pid={_pid}: {code}");
                         };
                         ctx.Start();
                         return ctx;
