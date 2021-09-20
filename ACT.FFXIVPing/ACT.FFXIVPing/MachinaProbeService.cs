@@ -69,7 +69,7 @@ namespace ACT.FFXIVPing
                     }
                     _processContexts.Clear();
 
-                    _plugin.Controller.NotifyLogMessageAppend(false, $"Parse mode = {targetMonitorType}.");
+                    Logger.Info($"Parse mode = {targetMonitorType}.");
                 }
 
                 foreach (var pid in pids)
@@ -128,7 +128,7 @@ namespace ACT.FFXIVPing
             {
                 Stop();
                 _isStarted = true;
-                _plugin.Controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) started.");
+                Logger.Info("Advanced Ping Detection (MachinaProbeService) started.");
             }
         }
 
@@ -147,7 +147,7 @@ namespace ACT.FFXIVPing
                     context.Stop();
                 }
                 _processContexts.Clear();
-                _plugin.Controller.NotifyLogMessageAppend(false, "Advanced Ping Detection (MachinaProbeService) stopped.");
+                Logger.Info("Advanced Ping Detection (MachinaProbeService) stopped.");
             }
         }
 
