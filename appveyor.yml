@@ -19,14 +19,20 @@ build:
   verbosity: minimal
 after_build:
 - cmd: >-
-    cd ACT.FFXIVPing\ACT.FFXIVPing\bin\%CONFIGURATION%\
-
+    cd %APPVEYOR_BUILD_FOLDER%\ACT.FFXIVPing\ACT.FFXIVPing\bin\%CONFIGURATION%\
 
     7z a -x!*.pdb %APPVEYOR_BUILD_FOLDER%\ACT.FFXIVPing-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%.7z .\*
+
+    cp %APPVEYOR_BUILD_FOLDER%\ACT.FFXIVPing\ACT.FFXIVPing\bin\%CONFIGURATION%\ACT.FFXIVPing.dll %APPVEYOR_BUILD_FOLDER%\CafePackage\Plugins\ACT.FFXIVPing
+
+    cd %APPVEYOR_BUILD_FOLDER%\CafePackage
+
+    7z a -tzip -xr!.gitkeep %APPVEYOR_BUILD_FOLDER%\ACT.FFXIVPing-%APPVEYOR_BUILD_VERSION%-%CONFIGURATION%-CAFE.zip .\*
 test: off
 artifacts:
 - path: ACT.FFXIVPing\ACT.FFXIVPing\bin\**\*
   name: Bin
 - path: ACT.FFXIVPing*.7z
   name: PKG
-  
+- path: ACT.FFXIVPing*.zip
+  name: PKG
