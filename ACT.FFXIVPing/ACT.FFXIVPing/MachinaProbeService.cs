@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using ACT.FoxCommon;
 using ACT.FoxCommon.logging;
 using FFXIVPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor;
@@ -37,7 +38,7 @@ namespace ACT.FFXIVPing
             }
         }
 
-        private void ControllerOnGameProcessUpdated(bool fromView, HashSet<uint> pids)
+        private void ControllerOnGameProcessUpdated(bool fromView, HashSet<ProcessInfo> processes)
         {
             lock (this)
             {
@@ -47,7 +48,7 @@ namespace ACT.FFXIVPing
                 }
 
                 var oldCtx = new HashSet<uint>(_processContexts.Keys);
-                oldCtx.ExceptWith(pids);
+                oldCtx.ExceptWith(processes.Select(it => it.Pid));
 
                 foreach (var pid in oldCtx)
                 {
@@ -73,11 +74,11 @@ namespace ACT.FFXIVPing
                     Logger.Info($"Parse mode = {targetMonitorType}.");
                 }
 
-                foreach (var pid in pids)
+                foreach (var process in processes)
                 {
-                    _processContexts.AddOrUpdate(pid, _pid =>
+                    _processContexts.AddOrUpdate(process.Pid, _pid =>
                     {
-                        var ctx = new ProcessContext(_pid, _currentMonitorType);
+                        var ctx = new ProcessContext(process, _currentMonitorType);
                         ctx.OnPingOpCodeDetected += code =>
                         {
                             Logger.Info($"IPC Ping OpCode detected for pid={_pid}: {code}");
@@ -173,9 +174,13 @@ namespace ACT.FFXIVPing
 
             public long LastEpoch { get; private set; } = 0;
 
-            public ProcessContext(uint pid, NetworkMonitorType monitorType)
+            public ProcessContext(ProcessInfo process, NetworkMonitorType monitorType)
             {
-                Monitor.ProcessID = pid;
+                Monitor.ProcessID = process.Pid;
+                if (process.FileName == Utils.GameExeNameDx11)
+                {
+                    Monitor.FFXIVDX11ExecutablePath = process.FilePath;
+                }
                 Monitor.MonitorType = monitorType;
 
                 // Packet sent by game client won't be captured if filter is enabled for RawSocket mode,

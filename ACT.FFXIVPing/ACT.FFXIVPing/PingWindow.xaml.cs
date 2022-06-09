@@ -170,9 +170,9 @@ namespace ACT.FFXIVPing
             CheckVisibility();
         }
 
-        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path, uint pid)
+        private void ControllerOnActivatedProcessPathChanged(bool fromView, ProcessInfo process)
         {
-            _activatedExePath = path;
+            _activatedExePath = process.FilePath;
             CheckVisibility();
         }
 

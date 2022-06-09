@@ -35,9 +35,9 @@ namespace ACT.FFXIVPing
             {
                 while (!WorkingThreadStopping)
                 {
-                    var pids = new HashSet<uint>(Utils.GetGamePids());
-                    Logger.Debug($"Game pids: [{string.Join(",", pids)}]");
-                    context.NotifyGameProcessUpdated(false, pids);
+                    var processes = Utils.GetGameProcesses().ToHashSet();
+                    Logger.Debug($"Game processes: [{string.Join(",", processes)}]");
+                    context.NotifyGameProcessUpdated(false, processes);
 
                     SafeSleep(2000);
                 }

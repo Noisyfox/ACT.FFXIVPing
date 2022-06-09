@@ -133,9 +133,9 @@ namespace ACT.FFXIVPing
             StatusLabel.Text = "Exited. Bye~";
         }
 
-        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path, uint pid)
+        private void ControllerOnActivatedProcessPathChanged(bool fromView, ProcessInfo process)
         {
-            _isGameActivated = Utils.IsGameExePath(path);
+            _isGameActivated = process.IsGameProcess;
         }
     }
 

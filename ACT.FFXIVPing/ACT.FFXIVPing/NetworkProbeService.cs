@@ -63,10 +63,10 @@ namespace ACT.FFXIVPing
             _contexts.Clear();
         }
 
-        private void ControllerOnActivatedProcessPathChanged(bool fromView, string path, uint pid)
+        private void ControllerOnActivatedProcessPathChanged(bool fromView, ProcessInfo process)
         {
-            _currentPid = pid;
-            DisplayByPid(pid);
+            _currentPid = process.Pid;
+            DisplayByPid(process.Pid);
         }
 
         private void DisplayByPid(uint pid, bool tryLast = true)
@@ -336,9 +336,9 @@ namespace ACT.FFXIVPing
         {
             private HashSet<uint> _gamePids = new HashSet<uint>();
 
-            public void GameProcessUpdated(bool fromView, HashSet<uint> pids)
+            public void GameProcessUpdated(bool fromView, HashSet<ProcessInfo> processes)
             {
-                _gamePids = pids;
+                _gamePids = processes.Select(it => it.Pid).ToHashSet();
             }
 
             protected override void DoWork(ProbeContext context)
