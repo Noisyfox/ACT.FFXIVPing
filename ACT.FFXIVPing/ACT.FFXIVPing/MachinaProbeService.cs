@@ -179,7 +179,7 @@ namespace ACT.FFXIVPing
                 Monitor.ProcessID = process.Pid;
                 if (process.FileName == Utils.GameExeNameDx11)
                 {
-                    Monitor.FFXIVDX11ExecutablePath = process.FilePath;
+                    Monitor.OodlePath = process.FilePath;
                 }
                 Monitor.MonitorType = monitorType;
 
