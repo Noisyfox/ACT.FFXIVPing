@@ -6,7 +6,6 @@ using ACT.FoxCommon.logging;
 using FFXIVPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor;
 using LibPingMachina.PingMonitor.handler;
-using Machina;
 using Machina.FFXIV;
 using Machina.Infrastructure;
 
@@ -17,6 +16,7 @@ namespace ACT.FFXIVPing
         private FFXIVPingPlugin _plugin;
         private bool _isStarted = false;
         private NetworkMonitorType _currentMonitorType = 0;
+        private bool _useDeucalion = false;
         private readonly ConcurrentDictionary<uint, ProcessContext> _processContexts = new ConcurrentDictionary<uint, ProcessContext>();
 
         public void AttachToAct(FFXIVPingPlugin plugin)
@@ -78,7 +78,7 @@ namespace ACT.FFXIVPing
                 {
                     _processContexts.AddOrUpdate(process.Pid, _pid =>
                     {
-                        var ctx = new ProcessContext(process, _currentMonitorType);
+                        var ctx = new ProcessContext(process, _currentMonitorType, _useDeucalion);
                         ctx.OnPingOpCodeDetected += code =>
                         {
                             Logger.Info($"IPC Ping OpCode detected for pid={_pid}: {code}");
@@ -169,12 +169,12 @@ namespace ACT.FFXIVPing
         {
             public event IPCPingOpCodeDetector.PingOpCodeDetectDelegate OnPingOpCodeDetected;
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
-            private readonly PacketMonitor _packetMonitor = new PacketMonitor();
+            private readonly PacketMonitor _packetMonitor;
             public ConnectionPing CurrentPing { get; private set; } = null;
 
             public long LastEpoch { get; private set; } = 0;
 
-            public ProcessContext(ProcessInfo process, NetworkMonitorType monitorType)
+            public ProcessContext(ProcessInfo process, NetworkMonitorType monitorType, bool useDeucalion)
             {
                 Monitor.ProcessID = process.Pid;
                 if (process.FileName == Utils.GameExeNameDx11)
@@ -182,11 +182,13 @@ namespace ACT.FFXIVPing
                     Monitor.OodlePath = process.FilePath;
                 }
                 Monitor.MonitorType = monitorType;
+                Monitor.UseDeucalion = useDeucalion;
 
                 // Packet sent by game client won't be captured if filter is enabled for RawSocket mode,
                 // so enable the filter only on WinPCap mode.
                 Monitor.UseRemoteIpFilter = monitorType == NetworkMonitorType.WinPCap;
 
+                _packetMonitor = new PacketMonitor(useDeucalion);
                 Monitor.MessageReceivedEventHandler = _packetMonitor.MessageReceived;
                 Monitor.MessageSentEventHandler = _packetMonitor.MessageSent;
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
