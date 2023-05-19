@@ -19,7 +19,7 @@ namespace ACT.FFXIVPing.localization {
     // 类通过类似于 ResGen 或 Visual Studio 的工具自动生成的。
     // 若要添加或移除成员，请编辑 .ResX 文件，然后重新运行 ResGen
     // (以 /str 作为命令选项)，或重新生成 VS 项目。
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class strings {
@@ -250,20 +250,20 @@ namespace ACT.FFXIVPing.localization {
         }
         
         /// <summary>
-        ///   查找类似 普通模式 的本地化字符串。
+        ///   查找类似 尝试使用进程注入捕获游戏数据 (更稳定) 的本地化字符串。
         /// </summary>
-        internal static string comboBoxParseModeNormal {
+        internal static string checkBoxUseDeucalion {
             get {
-                return ResourceManager.GetString("comboBoxParseModeNormal", resourceCulture);
+                return ResourceManager.GetString("checkBoxUseDeucalion", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 WinPCap (需安装驱动) 的本地化字符串。
+        ///   查找类似 使用 WinPCap/Npcap 捕获游戏数据 (需安装驱动) 的本地化字符串。
         /// </summary>
-        internal static string comboBoxParseModeWinPCap {
+        internal static string checkBoxUsePcap {
             get {
-                return ResourceManager.GetString("comboBoxParseModeWinPCap", resourceCulture);
+                return ResourceManager.GetString("checkBoxUsePcap", resourceCulture);
             }
         }
         
@@ -460,6 +460,15 @@ namespace ACT.FFXIVPing.localization {
         internal static string labelSize {
             get {
                 return ResourceManager.GetString("labelSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 * 若FFXIV解析插件开启了进程注入，则直接从游戏进程中读取网络数据 的本地化字符串。
+        /// </summary>
+        internal static string labelUseDeucalion {
+            get {
+                return ResourceManager.GetString("labelUseDeucalion", resourceCulture);
             }
         }
         

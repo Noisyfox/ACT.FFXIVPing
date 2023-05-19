@@ -175,8 +175,8 @@ namespace ACT.FFXIVPing
             _controller.NotifyAdvancedPingEnabled(true, checkBoxAdvancedPing.Checked);
 
             var enabled = checkBoxAdvancedPing.Checked;
-            comboBoxParseMode.Enabled = enabled;
-            labelParseMode.Enabled = enabled;
+            checkBoxUsePcap.Enabled = enabled;
+            checkBoxUseDeucalion.Enabled = enabled;
         }
 
         private void NumericUpDownRefreshIntervalOnValueChanged(object sender, EventArgs eventArgs)
@@ -187,11 +187,6 @@ namespace ACT.FFXIVPing
         private void TextBoxOverlayContentOnTextChanged(object sender, EventArgs eventArgs)
         {
             _controller.NotifyOverlayTextTemplateChanged(true, textBoxOverlayContentNormal.Text, textBoxOverlayContentNoData.Text);
-        }
-
-        private void ComboBoxParseMode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            _plugin.Settings.ParseMode = (SettingsHolder.ParseModes)comboBoxParseMode.SelectedIndex;
         }
 
         private void buttonResetTexts_Click(object sender, EventArgs e)
@@ -219,15 +214,26 @@ namespace ACT.FFXIVPing
             var settings = _plugin.Settings;
             textBoxOverlayContentNormal.Text = settings.OverlayContentNormal ?? strings.defaultOverlayContentNormal;
             textBoxOverlayContentNoData.Text = settings.OverlayContentNoData ?? strings.defaultOverlayContentNoData;
-            comboBoxParseMode.SelectedIndex = (int)settings.ParseMode;
+            checkBoxUsePcap.Checked = settings.ParseMode == SettingsHolder.ParseModes.WinPCap;
+            checkBoxUseDeucalion.Checked = settings.UseDeucalion;
 
             textBoxOverlayContentNormal.TextChanged += TextBoxOverlayContentOnTextChanged;
             textBoxOverlayContentNoData.TextChanged += TextBoxOverlayContentOnTextChanged;
-            comboBoxParseMode.SelectedIndexChanged += ComboBoxParseMode_SelectedIndexChanged;
+            checkBoxUsePcap.CheckedChanged += ParseModeChanged;
+            checkBoxUseDeucalion.CheckedChanged += ParseModeChanged;
 
             CheckBoxAdvancedPingOnCheckedChanged(this, EventArgs.Empty);
             NumericUpDownRefreshIntervalOnValueChanged(this, EventArgs.Empty);
             TextBoxOverlayContentOnTextChanged(this, EventArgs.Empty);
+            ParseModeChanged(this, EventArgs.Empty);
+        }
+
+        private void ParseModeChanged(object sender, EventArgs e)
+        {
+            _plugin.Settings.UseDeucalion = checkBoxUseDeucalion.Checked;
+            _plugin.Settings.ParseMode = checkBoxUsePcap.Checked
+                ? SettingsHolder.ParseModes.WinPCap
+                : SettingsHolder.ParseModes.Normal;
         }
 
         private void ControllerOnOverlayMoved(bool fromView, int x, int y)

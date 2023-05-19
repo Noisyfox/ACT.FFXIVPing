@@ -78,12 +78,13 @@
             this.labelAdvancedPing = new System.Windows.Forms.Label();
             this.labelRefreshInterval = new System.Windows.Forms.Label();
             this.numericUpDownRefreshInterval = new System.Windows.Forms.NumericUpDown();
-            this.labelParseMode = new System.Windows.Forms.Label();
-            this.comboBoxParseMode = new System.Windows.Forms.ComboBox();
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.richTextBoxLog = new System.Windows.Forms.RichTextBox();
             this.checkBoxDebugLogging = new System.Windows.Forms.CheckBox();
+            this.checkBoxUsePcap = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseDeucalion = new System.Windows.Forms.CheckBox();
+            this.labelUseDeucalion = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageGeneralSettings.SuspendLayout();
             this.groupBoxUpdate.SuspendLayout();
@@ -675,20 +676,22 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.checkBoxAdvancedPing, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelAdvancedPing, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 4);
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 4);
-            this.tableLayoutPanel2.Controls.Add(this.labelParseMode, 0, 2);
-            this.tableLayoutPanel2.Controls.Add(this.comboBoxParseMode, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.checkBoxUsePcap, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.checkBoxUseDeucalion, 0, 3);
+            this.tableLayoutPanel2.Controls.Add(this.labelRefreshInterval, 0, 6);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownRefreshInterval, 1, 6);
+            this.tableLayoutPanel2.Controls.Add(this.labelUseDeucalion, 0, 4);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 6;
+            this.tableLayoutPanel2.RowCount = 8;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(499, 288);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
@@ -721,7 +724,7 @@
             // 
             this.labelRefreshInterval.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelRefreshInterval.AutoSize = true;
-            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 219);
+            this.labelRefreshInterval.Location = new System.Drawing.Point(3, 251);
             this.labelRefreshInterval.Name = "labelRefreshInterval";
             this.labelRefreshInterval.Size = new System.Drawing.Size(149, 12);
             this.labelRefreshInterval.TabIndex = 2;
@@ -731,7 +734,7 @@
             // 
             this.numericUpDownRefreshInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownRefreshInterval.DecimalPlaces = 1;
-            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 215);
+            this.numericUpDownRefreshInterval.Location = new System.Drawing.Point(158, 247);
             this.numericUpDownRefreshInterval.Maximum = new decimal(new int[] {
             60,
             0,
@@ -750,29 +753,6 @@
             0,
             0,
             0});
-            // 
-            // labelParseMode
-            // 
-            this.labelParseMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelParseMode.AutoSize = true;
-            this.labelParseMode.Location = new System.Drawing.Point(3, 173);
-            this.labelParseMode.Name = "labelParseMode";
-            this.labelParseMode.Size = new System.Drawing.Size(149, 12);
-            this.labelParseMode.TabIndex = 6;
-            this.labelParseMode.Text = "Parse Mode:";
-            // 
-            // comboBoxParseMode
-            // 
-            this.comboBoxParseMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxParseMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxParseMode.FormattingEnabled = true;
-            this.comboBoxParseMode.Items.AddRange(new object[] {
-            "Normal",
-            "WinPCap"});
-            this.comboBoxParseMode.Location = new System.Drawing.Point(158, 169);
-            this.comboBoxParseMode.Name = "comboBoxParseMode";
-            this.comboBoxParseMode.Size = new System.Drawing.Size(338, 20);
-            this.comboBoxParseMode.TabIndex = 7;
             // 
             // tabPageLog
             // 
@@ -823,6 +803,44 @@
             this.checkBoxDebugLogging.Text = "Show Debug Logging";
             this.checkBoxDebugLogging.UseVisualStyleBackColor = true;
             this.checkBoxDebugLogging.CheckedChanged += new System.EventHandler(this.checkBoxDebugLogging_CheckedChanged);
+            // 
+            // checkBoxUsePcap
+            // 
+            this.checkBoxUsePcap.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxUsePcap.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.checkBoxUsePcap, 2);
+            this.checkBoxUsePcap.Location = new System.Drawing.Point(3, 171);
+            this.checkBoxUsePcap.Margin = new System.Windows.Forms.Padding(3, 5, 3, 3);
+            this.checkBoxUsePcap.Name = "checkBoxUsePcap";
+            this.checkBoxUsePcap.Size = new System.Drawing.Size(493, 16);
+            this.checkBoxUsePcap.TabIndex = 7;
+            this.checkBoxUsePcap.Text = "Use WinPcap/Npcap";
+            this.checkBoxUsePcap.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUseDeucalion
+            // 
+            this.checkBoxUseDeucalion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxUseDeucalion.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.checkBoxUseDeucalion, 2);
+            this.checkBoxUseDeucalion.Location = new System.Drawing.Point(3, 193);
+            this.checkBoxUseDeucalion.Name = "checkBoxUseDeucalion";
+            this.checkBoxUseDeucalion.Size = new System.Drawing.Size(493, 16);
+            this.checkBoxUseDeucalion.TabIndex = 8;
+            this.checkBoxUseDeucalion.Text = "Use Game Injection";
+            this.checkBoxUseDeucalion.UseVisualStyleBackColor = true;
+            // 
+            // labelUseDeucalion
+            // 
+            this.labelUseDeucalion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelUseDeucalion.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.labelUseDeucalion, 2);
+            this.labelUseDeucalion.Enabled = false;
+            this.labelUseDeucalion.Location = new System.Drawing.Point(20, 212);
+            this.labelUseDeucalion.Margin = new System.Windows.Forms.Padding(20, 0, 3, 0);
+            this.labelUseDeucalion.Name = "labelUseDeucalion";
+            this.labelUseDeucalion.Size = new System.Drawing.Size(476, 12);
+            this.labelUseDeucalion.TabIndex = 9;
+            this.labelUseDeucalion.Text = "* FFXIV ACT Plugin\'s Deucalion injection option needs to be enabled as well";
             // 
             // FFXIVPingTabControl
             // 
@@ -912,9 +930,10 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Label labelRefreshInterval;
         private System.Windows.Forms.NumericUpDown numericUpDownRefreshInterval;
-        private System.Windows.Forms.Label labelParseMode;
-        private System.Windows.Forms.ComboBox comboBoxParseMode;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.CheckBox checkBoxDebugLogging;
+        private System.Windows.Forms.CheckBox checkBoxUsePcap;
+        private System.Windows.Forms.CheckBox checkBoxUseDeucalion;
+        private System.Windows.Forms.Label labelUseDeucalion;
     }
 }

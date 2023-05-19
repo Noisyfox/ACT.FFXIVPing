@@ -180,11 +180,11 @@
   <data name="checkBoxShowOverlay" xml:space="preserve">
     <value>Show Overlay</value>
   </data>
-  <data name="comboBoxParseModeNormal" xml:space="preserve">
-    <value>Normal Network</value>
+  <data name="checkBoxUseDeucalion" xml:space="preserve">
+    <value>Try using Deucalion for network data</value>
   </data>
-  <data name="comboBoxParseModeWinPCap" xml:space="preserve">
-    <value>WinPCap Network</value>
+  <data name="checkBoxUsePcap" xml:space="preserve">
+    <value>Use WinPCap-compatible library for network data</value>
   </data>
   <data name="defaultOverlayContentNoData" xml:space="preserve">
     <value>No Ping Data...</value>
@@ -255,6 +255,9 @@ Sepcial Character: New line \n</value>
   </data>
   <data name="labelSize" xml:space="preserve">
     <value>Size</value>
+  </data>
+  <data name="labelUseDeucalion" xml:space="preserve">
+    <value>* Read network data directly from game process if FFXIV ACT Plugin's Deucalion injection option is enabled</value>
   </data>
   <data name="labelWidth" xml:space="preserve">
     <value>Width:</value>

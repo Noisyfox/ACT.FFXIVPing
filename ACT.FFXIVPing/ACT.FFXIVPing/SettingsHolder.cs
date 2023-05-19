@@ -90,6 +90,8 @@ namespace ACT.FFXIVPing
 
         public ParseModes ParseMode { get; set; } = ParseModes.Normal;
 
+        public bool UseDeucalion { get; set; } = true;
+
 
         public enum ParseModes : int
         {
@@ -112,6 +114,7 @@ namespace ACT.FFXIVPing
             Settings.AddStringSetting(nameof(OverlayContentNormal));
             Settings.AddStringSetting(nameof(OverlayContentNoData));
             Settings.AddIntSetting(nameof(ParseMode));
+            Settings.AddBooleanSetting(nameof(UseDeucalion));
 
             _controller = plugin.Controller;
 

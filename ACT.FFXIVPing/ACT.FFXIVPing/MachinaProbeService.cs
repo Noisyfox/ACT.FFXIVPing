@@ -1,5 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using ACT.FoxCommon;
 using ACT.FoxCommon.logging;
@@ -59,9 +61,11 @@ namespace ACT.FFXIVPing
                 }
 
                 // Check network parse mode
+                var targetUseDeucalion = _plugin.Settings.UseDeucalion;
                 var targetMonitorType = DetermineMonitorType();
-                if (targetMonitorType != _currentMonitorType)
+                if (targetMonitorType != _currentMonitorType || targetUseDeucalion != _useDeucalion)
                 {
+                    _useDeucalion = targetUseDeucalion;
                     _currentMonitorType = targetMonitorType;
 
                     // Stop all existing monitors since the parse mode has changed
@@ -71,14 +75,78 @@ namespace ACT.FFXIVPing
                     }
                     _processContexts.Clear();
 
-                    Logger.Info($"Parse mode = {targetMonitorType}.");
+                    Logger.Info($"Parse mode = {targetMonitorType}, use Deucalion = {targetUseDeucalion}.");
+                }
+
+                var deucalionPipePids = new HashSet<uint>();
+                if (_useDeucalion)
+                {
+                    try
+                    {
+                        var ps = Directory.GetFiles("\\\\.\\pipe\\", "deucalion-*");
+                        Logger.Debug($"Found {ps.Length} Deducalion pipes");
+                        foreach (var s in ps)
+                        {
+                            Logger.Debug(s);
+                            var pids = s.Split('-').Last();
+                            if (uint.TryParse(pids, out var pid))
+                            {
+                                deucalionPipePids.Add(pid);
+                            }
+                            else
+                            {
+                                Logger.Error($"Failed to parse Deucalion pipe {s}, ignored");
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error("Failed to detect Deucalion injection", e);
+                    }
+
+                    // Check if Deucalion needs to be enabled for existing processes
+                    var processesNeedRecreation = new HashSet<uint>();
+                    foreach (var c in _processContexts)
+                    {
+                        var ctx = c.Value;
+                        if (!ctx.Monitor.UseDeucalion)
+                        {
+                            // Check if Deucalion has been injected for this process
+                            if (deucalionPipePids.Contains(c.Key))
+                            {
+                                processesNeedRecreation.Add(c.Key);
+                            }
+                        }
+                    }
+                    // Stop process monitors that started with Deucalion disabled
+                    // so we can create it again with Deucalion enabled
+                    foreach (var pid in processesNeedRecreation)
+                    {
+                        if (_processContexts.TryRemove(pid, out var ctx))
+                        {
+                            ctx.Stop();
+                        }
+                    }
                 }
 
                 foreach (var process in processes)
                 {
                     _processContexts.AddOrUpdate(process.Pid, _pid =>
                     {
-                        var ctx = new ProcessContext(process, _currentMonitorType, _useDeucalion);
+                        var useDeucalion = _useDeucalion && deucalionPipePids.Contains(_pid);
+                        if (_useDeucalion)
+                        {
+                            if (useDeucalion)
+                            {
+                                Logger.Info($"Deucalion detected and enabled for process {_pid}");
+                            }
+                            else
+                            {
+                                Logger.Warn($"Deucalion not detected for process {_pid}, plugin may not working properly");
+                            }
+                        }
+
+                        var ctx = new ProcessContext(process, _currentMonitorType, useDeucalion);
                         ctx.OnPingOpCodeDetected += code =>
                         {
                             Logger.Info($"IPC Ping OpCode detected for pid={_pid}: {code}");

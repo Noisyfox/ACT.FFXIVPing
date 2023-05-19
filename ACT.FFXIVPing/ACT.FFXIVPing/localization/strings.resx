@@ -180,11 +180,11 @@
   <data name="checkBoxShowOverlay" xml:space="preserve">
     <value>显示悬浮窗</value>
   </data>
-  <data name="comboBoxParseModeNormal" xml:space="preserve">
-    <value>普通模式</value>
+  <data name="checkBoxUseDeucalion" xml:space="preserve">
+    <value>尝试使用进程注入捕获游戏数据 (更稳定)</value>
   </data>
-  <data name="comboBoxParseModeWinPCap" xml:space="preserve">
-    <value>WinPCap (需安装驱动)</value>
+  <data name="checkBoxUsePcap" xml:space="preserve">
+    <value>使用 WinPCap/Npcap 捕获游戏数据 (需安装驱动)</value>
   </data>
   <data name="defaultOverlayContentNoData" xml:space="preserve">
     <value>没有数据...</value>
@@ -255,6 +255,9 @@
   </data>
   <data name="labelSize" xml:space="preserve">
     <value>尺寸</value>
+  </data>
+  <data name="labelUseDeucalion" xml:space="preserve">
+    <value>* 若FFXIV解析插件开启了进程注入，则直接从游戏进程中读取网络数据</value>
   </data>
   <data name="labelWidth" xml:space="preserve">
     <value>宽:</value>
