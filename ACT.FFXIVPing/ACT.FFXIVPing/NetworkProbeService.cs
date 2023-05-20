@@ -145,6 +145,10 @@ namespace ACT.FFXIVPing
                 else
                 {
                     rttStr = $"{(uint)ping.Value.Ping}ms";
+                    if (Logger.IsDebugLevelEnabled)
+                    {
+                        Logger.Debug($"NetworkProbeService: Show ping sampled from {ping.Key}");
+                    }
                 }
 
                 uint lost = iphlpapiContext?.Lost ?? 0;
@@ -291,6 +295,11 @@ namespace ACT.FFXIVPing
                         SampleTime = rttConn.LastActivate.ToUniversalTime(),
                     };
                     Lost = validConnections.Select(it => it.Lost).Max();
+                }
+
+                if (Logger.IsDebugLevelEnabled)
+                {
+                    Logger.Debug($"iphlpapi: New ping sampled for process {Pid}: {RTT?.Ping}");
                 }
             }
         }

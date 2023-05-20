@@ -266,6 +266,10 @@ namespace ACT.FFXIVPing
             private void PacketMonitorOnOnPingSample(ConnectionPing ping)
             {
                 CurrentPing = ping;
+                if (Logger.IsDebugLevelEnabled)
+                {
+                    Logger.Debug($"MachinaProbService: New ping sampled for process {Monitor.ProcessID}: {ping.Ping}");
+                }
             }
 
             public void Start()
