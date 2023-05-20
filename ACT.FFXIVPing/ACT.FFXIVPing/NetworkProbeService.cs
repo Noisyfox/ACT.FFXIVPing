@@ -284,7 +284,8 @@ namespace ACT.FFXIVPing
                     RTT = new ConnectionPing
                     {
                         Connection = rttConn.ConnectionID,
-                        Ping = rttConn.RTT
+                        Ping = rttConn.RTT,
+                        SampleTime = rttConn.LastActivate.ToUniversalTime(),
                     };
                     Lost = validConnections.Select(it => it.Lost).Max();
                 }
