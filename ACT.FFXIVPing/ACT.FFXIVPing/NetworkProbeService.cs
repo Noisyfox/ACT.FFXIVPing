@@ -69,11 +69,19 @@ namespace ACT.FFXIVPing
             DisplayByPid(process.Pid);
         }
 
+        private ProcessContext FirstValidPing(DateTime pingWindow)
+        {
+            return _contexts.Values.FirstOrDefault(c => c.RTT.SampleTime > pingWindow);
+        }
+
         private void DisplayByPid(uint pid, bool tryLast = true)
         {
             // Merge process data from different services
             var machinaPing = _machinaProbeService.FindPing(pid, out var machinaProcessFound);
             var iphlpapiProcessFound = _contexts.TryGetValue(pid, out var iphlpapiContext);
+
+            // Only ping sampled within 1 minute is valid
+            var pingWindow = DateTime.UtcNow.AddMinutes(-1);
 
             var processFound = machinaProcessFound || iphlpapiProcessFound;
             if (!processFound)
@@ -84,8 +92,8 @@ namespace ACT.FFXIVPing
                     return;
                 }
 
-                var firstMachinaContext = _machinaProbeService.FirstPing();
-                var firstIphlpapiContext = _contexts.Values.FirstOrDefault();
+                var firstMachinaContext = _machinaProbeService.FirstValidPing(pingWindow);
+                var firstIphlpapiContext = FirstValidPing(pingWindow);
 
                 if (firstMachinaContext.HasValue)
                 {
@@ -112,28 +120,22 @@ namespace ACT.FFXIVPing
             }
             else
             {
-                uint lost = 0;
-                ConnectionPing ping;
-
-                var iphlpapiRtt = iphlpapiContext?.RTT;
-                if (iphlpapiRtt == null)
-                {
-                    ping = machinaPing;
-                }
-                else
-                {
-                    lost = iphlpapiContext.Lost;
-                    if (machinaPing == null)
-                    {
-                        ping = iphlpapiRtt;
-                    }
-                    else
-                    {
-                        ping = machinaPing.Ping >= iphlpapiRtt.Ping ? machinaPing : iphlpapiRtt;
-                    }
-                }
-
                 _lastPid = pid;
+
+                var ping = new Dictionary<string, ConnectionPing>
+                    {
+                        { "Machina", machinaPing },
+                        { "iphlpapi", iphlpapiContext?.RTT },
+                    }
+                    .Where(kv =>
+                        kv.Value != null
+                        && kv.Value.Ping > 0.5 // Remove zero pings
+                        && kv.Value.SampleTime > pingWindow // Remove inactive samples
+                    )
+                    // Then get the largest ping from all available sources
+                    .OrderByDescending(kv => kv.Value.Ping)
+                    .Select(kv => new { kv.Key, kv.Value })
+                    .FirstOrDefault();
 
                 string rttStr;
                 if (ping == null)
@@ -142,14 +144,15 @@ namespace ACT.FFXIVPing
                 }
                 else
                 {
-                    rttStr = $"{(uint)ping.Ping}ms";
+                    rttStr = $"{(uint)ping.Value.Ping}ms";
                 }
 
+                uint lost = iphlpapiContext?.Lost ?? 0;
                 var finalStr = _textTemplateNormal
-                    .Replace("{ping}", $"{(ping == null ? "-1" : ((uint)ping.Ping).ToString())}")
+                    .Replace("{ping}", $"{(ping == null ? "-1" : ((uint)ping.Value.Ping).ToString())}")
                     .Replace("{ping_ms_na}", rttStr)
-                    .Replace("{local_ip}", ping?.Connection?.LocalIP ?? "N/A")
-                    .Replace("{server_ip}", ping?.Connection?.RemoteIP ?? "N/A")
+                    .Replace("{local_ip}", ping?.Value?.Connection?.LocalIP ?? "N/A")
+                    .Replace("{server_ip}", ping?.Value?.Connection?.RemoteIP ?? "N/A")
                     .Replace("{lost}", $"{lost}");
 
                 _controller.NotifyOverlayContentChanged(false, finalStr);

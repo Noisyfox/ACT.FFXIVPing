@@ -178,9 +178,9 @@ namespace ACT.FFXIVPing
             return null;
         }
 
-        public KeyValuePair<uint, ConnectionPing>? FirstPing()
+        public KeyValuePair<uint, ConnectionPing>? FirstValidPing(DateTime pingWindow)
         {
-            var firstCtx = _processContexts.Values.FirstOrDefault();
+            var firstCtx = _processContexts.Values.FirstOrDefault(c => c.CurrentPing != null && c.CurrentPing.SampleTime > pingWindow);
 
             if (firstCtx == null)
             {

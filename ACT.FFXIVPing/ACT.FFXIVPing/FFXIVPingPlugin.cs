@@ -27,7 +27,7 @@ namespace ACT.FFXIVPing
         private bool _isGameActivated = false;
 
         public override void InitPlugin(TabPage pluginScreenSpace, Label pluginStatusText)
-        {   
+        {
             // Display log
             Logger.OnLogging = s => Controller.NotifyLogMessageAppend(false, s);
 
