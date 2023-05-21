@@ -237,7 +237,7 @@ namespace ACT.FFXIVPing
         {
             public event IPCPingOpCodeDetector.PingOpCodeDetectDelegate OnPingOpCodeDetected;
             public FFXIVNetworkMonitor Monitor { get; } = new FFXIVNetworkMonitor();
-            private readonly PacketMonitor _packetMonitor;
+            private readonly PacketMonitor _packetMonitor = new PacketMonitor();
             public ConnectionPing CurrentPing { get; private set; } = null;
 
             public long LastEpoch { get; private set; } = 0;
@@ -256,7 +256,6 @@ namespace ACT.FFXIVPing
                 // so enable the filter only on WinPCap mode.
                 Monitor.UseRemoteIpFilter = monitorType == NetworkMonitorType.WinPCap;
 
-                _packetMonitor = new PacketMonitor(useDeucalion);
                 Monitor.MessageReceivedEventHandler = _packetMonitor.MessageReceived;
                 Monitor.MessageSentEventHandler = _packetMonitor.MessageSent;
                 _packetMonitor.OnPingSample += PacketMonitorOnOnPingSample;
