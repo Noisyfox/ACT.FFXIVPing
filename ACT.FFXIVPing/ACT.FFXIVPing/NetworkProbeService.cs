@@ -71,7 +71,7 @@ namespace ACT.FFXIVPing
 
         private ProcessContext FirstValidPing(DateTime pingWindow)
         {
-            return _contexts.Values.FirstOrDefault(c => c.RTT.SampleTime > pingWindow);
+            return _contexts.Values.FirstOrDefault(c => c.RTT != null && c.RTT.SampleTime > pingWindow);
         }
 
         private void DisplayByPid(uint pid, bool tryLast = true)
